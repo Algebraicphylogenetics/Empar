@@ -12,37 +12,39 @@ To compile this code you need a development environment with the GNU gcc compile
 ```
 empar <tree file> <fasta file> <model>
 ```
+where
+*  *tree file*   [Newick] tree (not necessarily bifurcated)
+*  *fasta file*  [fasta] input alignment 
+*  *model*       model: jc, k80, k81, ssm.
 e.g.
 ```
 ./Empar test.tree data.fa ssm,
 ```
-where
-*  <tree file>   tree in  a Newick format (any tree, not necessarily bifurcated)
-*  <fasta file>  input alignment in a fasta format
-*  <model>       model: jc, k80, k81, ssm
 
 
 
 The nodes in the tree are labeled in the following order: first come the leaves in the order in which they appear in the [Newick] input tree format, followed by the internal nodes starting from the root and going top down from left to right.
-For example, given a tree: *((human:0.01,ape:0.2,hamster:0.3):0.5,bird:0.4,amoeba:0.8)* the leaves take the labels 0-4: human, ape, hamster, burred, amoeba. There are two internal nodes: the 'right' one is labeled as the root (6), the 'left' one with three leaves is labeled as (5). Subsequently, the edges are listed top-down, starting from the root, from left to right: (5, 6)  0.5; (5, 3)  0.4;  (5, 4)  0.8;  (6, 0)  0.01;  (6, 1)     
+For example, given a tree: 
+```
+((human:0.01,ape:0.2,hamster:0.3):0.5,bird:0.4,amoeba:0.8)
+```
+the leaves take the labels 0-4: human, ape, hamster, burred, amoeba. There are two internal nodes: the 'right' one is labeled as the root (6), the 'left' one with three leaves is labeled as (5). Subsequently, the edges are listed top-down, starting from the root, from left to right: (5, 6)  0.5; (5, 3)  0.4;  (5, 4)  0.8;  (6, 0)  0.01;  (6, 1)     
   0.2;  (6, 2)  0.3. 
 
-This is also the order in which the estimated matrices are listed in the output file.
+This is also the order, in which the estimated matrices are listed in the output file.
 
-### Note
-WARNING will pop up anytime a node of valency 2 is present. The reason for it is that the parameters associated to the outgoing edges are non-identifiable. Neither are the branches stemming from such edges. In fact, one can identify only the product of the matrices and the sum of the branches.
+### Note on identifiability
+WARNING is generated when a node of valency 2 is present. This is due to the fact that the parameters associated with the outgoing edges are non-identifiable. Neither are the branches stemming from such edges. In fact, one can identify only the product of such matrices and the sum of the branches.
 
 ### Output:
-     model, tree details: # of leaves, nodes, edges; original branch lengths (if given);
-     parameter variance is calculated from the observed Fisher information. The order follows the order of the edges and lists 
-the free off-diagonal parameters of the model, e.g. JC69 lists only 1 parameter of moving to another state per matrix.
 
-#### Output files
-The estimated parameters are saved in the files with the same basename as the [fasta] file and a ".dat/.cov“ suffix
+The estimated parameters are saved in the files with the same basename as the [fasta] file and ".dat/.cov“ suffix
 
 1. name_of_the_fasta_file.dat, which contains the list of all the estimated matrices in the order of the branches (and the root if in the case of the SSM)
 
 2. name_of_the_fasta_file.cov, which is the variance-covariance matrix for the free parameters (#num_edges * #free_param)X(#num_edges*#free_param)
+Parameter variance is calculated from the observed Fisher information. The order follows the order of the edges and lists 
+the free off-diagonal parameters of the model, e.g. JC69 lists only 1 parameter of moving to another state per matrix.
 
 
 ##### Sample output
