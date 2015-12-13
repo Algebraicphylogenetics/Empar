@@ -95,5 +95,8 @@ If one of the output branch lengths is given as *nan* it is due to a negative de
 For generating data under non-homogeneous models:
 > Kedzierska A.M. and Casanellas M.: “ GenNon-h: Simulating multiple sequence alignments under the non-homogeneous dna models." (BMC Bioinformatics 2012, 13:216)
 
+### Dependencies
+
+The package used version 1.47.0 of the [boost] library for parts of the code involving maths and random generation (downloaded from: [boost source]). As such, use, modification and distribution are subject to the Boost Software License, Version 1.0. (See [boost license]).
 
 <sub> *This is a free software and it can be redistributed, modified or else as given by the terms of the GNU General Public License.* </sub>
