@@ -28,10 +28,9 @@ For example, given a tree:
 ```
 ((human:0.01,ape:0.2,hamster:0.3):0.5,bird:0.4,amoeba:0.8)
 ```
-the leaves take the labels 0-4: human, ape, hamster, burred, amoeba. There are two internal nodes: the 'right' one is labeled as the root (6), the 'left' one with three leaves is labeled as (5). Subsequently, the edges are listed top-down, starting from the root, from left to right: (5, 6)  0.5; (5, 3)  0.4;  (5, 4)  0.8;  (6, 0)  0.01;  (6, 1)     
-  0.2;  (6, 2)  0.3. 
+the leaves take the labels 0-4: human, ape, hamster, burred, amoeba. There are two internal nodes: the 'right' one is labeled as the root (6), the 'left' one with three leaves is labeled as (5). Subsequently, the edges are listed top-down, starting from the root, from left to right: (5, 6)  0.5; (5, 3)  0.4;  (5, 4)  0.8;  (6, 0)  0.01;  (6, 1)  0.2;  (6, 2)  0.3. 
 
-This is also the order, in which the estimated matrices are listed in the output file.
+This is also the order in which the estimated matrices are listed in the output file.
 
 ### Note on identifiability
 WARNING is generated when a node of valency 2 is present. This is due to the fact that the parameters associated with the outgoing edges are non-identifiable. Neither are the branches stemming from such edges. In fact, one can identify only the product of such matrices and the sum of the branches.
