@@ -41,7 +41,7 @@ The estimated parameters are saved in the files with the same basename as the [f
 
 1. name_of_the_fasta_file.dat, which contains the list of all the estimated matrices in the order of the branches (and the root if in the case of the SSM)
 
-2. name_of_the_fasta_file.cov, which is the variance-covariance matrix for the free parameters (#num_edges * #free_param)X(#num_edges*#free_param)
+2. name_of_the_fasta_file.cov, which is the variance-covariance matrix for the free parameters (#num_edges * #free_param)X(#num_edges*#free_param).
 Parameter variance is calculated from the observed Fisher information. The order follows the order of the edges and lists 
 the free off-diagonal parameters of the model, e.g. JC69 lists only 1 parameter of moving to another state per matrix.
 
