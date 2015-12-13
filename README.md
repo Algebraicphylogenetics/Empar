@@ -2,18 +2,9 @@
 This is a readme for Empar- package based on the EM algorithm for parameter estimation in discrete-time Markov models:
 http://genome.crg.es/cgi-bin/phylo_mod_sel/AlgEmpar.pl
 
-----------------------------------------------------
-This is a free software and it can be redistributed, modified or else as given by the terms of the GNU General Public License.
 
-We use boost (http://www.boost.org/) for some code involving maths and random generation. We used
-version 1.47.0 (http://sourceforge.net/projects/boost/files/boost/1.47.0/).
-// Use, modification and distribution are subject to the Boost Software License,
-// Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt).
 
-seqUtil.cpp, Newickform.cpp   modified version of the tree parser of Yu-Wei Wu (Indiana Univ), http://yuweibioinfo.blogspot.com/2008/10/newick-tree-parser-in-c-make-use-of.html
 
-expm.hpp Function calculating matrix exponential was adopted from: https://www.dbtsai.com/blog/2008-11-25-matrix-exponential/
 
 
 Overview
@@ -27,33 +18,6 @@ Empar is compiled with the command 'make'.
 
 
 
-Source Code
-----------------------------------------------------
-
-include             A piece of the boost library.
-alignment.cpp       Managing alignments and vectors of counts.
-em.cpp              The EM algorithm, KL-divergence, likelihoods and much more
-empar.cpp           The empar main function.
-fisher.cpp          Computations of Fisher information.
-matrix.cpp          Matrix creation and destruction.
-miscelania.cpp      Utility functions
-mixtest.cpp         The mixtest main function
-model.cpp           Model dependent functions
-model_gmm.cpp       The GMM functions
-model_jc.cpp        The JC69*functions
-model_k80.cpp       The K80* functions
-model_k81.cpp       The K81* functions
-model_ssm.cpp       The SSM functions
-Newickform.cpp      Read the tree
-parameters.cpp      Data structure for the parameters. L2 distances, etc.
-random.cpp          The random generation functions, for use in parameter sampling and alignment simulation.
-read_fasta.cpp      Reading fasta files.
-sampling.cpp        Functions used for random parameter sampling.
-seqUtil.cpp         Used for reading the tree. Written by Yu-Wei Wu.
-state.cpp           Data structure for the states.
-state_list.cpp      Data structure for a list of all states in a tree (on leaves and hidden)
-tree.cpp            Data structure for the trees (as a list of edges).
-expm.hpp	    Matrix exponential 
 
 
 
