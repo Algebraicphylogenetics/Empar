@@ -1,6 +1,5 @@
 #Overview
-Empar is a package based on the EM algorithm for parameter estimation in discrete-time Markov models:
-
+**Empar** is an implementation of an MLE method based on the EM algorithm for effective estimation parameters of the (discrete-time) Markov evolutionary models.
 
 ### Dependencies
 
