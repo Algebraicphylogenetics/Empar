@@ -9,12 +9,13 @@ The package used version 1.47.0 of the [boost] library for parts of the code inv
 To compile this code you need a development environment with the GNU gcc compiler ('make').
 
 ```
-empar <tree file> <fasta file> <model>
+empar <tree file> <fasta file> <model>,
 ```
 where
-*  *tree file*   [Newick] tree (not necessarily bifurcated)
-*  *fasta file*  [fasta] input alignment 
-*  *model*       model: jc, k80, k81, ssm.
+*  *tree file* —-  [Newick] tree (not necessarily bifurcated)
+*  *fasta file* —- [fasta] input alignment 
+*  *model*     —- model choice: jc, k80, k81, ssm,
+
 e.g.
 ```
 ./Empar test.tree data.fa ssm,
