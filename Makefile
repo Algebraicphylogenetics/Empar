@@ -1,10 +1,10 @@
-CC=g++
+CC=g++-5
 
 # FLAGS=-Wall
 # FLAGS=-Wall -ggdb
-FLAGS=-O3 -Wall
+FLAGS=-O3 -Wall 
 
-MAINS=Empar.o 
+MAINS=Empar.o
 
 TARGETS=$(patsubst %.o,%,$(MAINS))
 OBJ=$(filter-out $(MAINS),$(patsubst %.cpp,%.o,$(wildcard *.cpp)))
@@ -34,6 +34,6 @@ $(TARGETS): %: %.o $(OBJ)
 
 
 clean:
-	rm -f *.o *~ $(TARGETS) 
+	rm -f *.o *~ $(TARGETS)
 src-pkg: $(TARGETS) $(DEPS)
 	tar czf MixPar.tar.gz $(FILES)
