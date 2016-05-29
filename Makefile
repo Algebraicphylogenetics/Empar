@@ -1,14 +1,15 @@
-CXX=g++
-LD=g++
+CXX=g++-5
+LD=g++-5
 
 # FLAGS=-Wall
 # FLAGS=-Wall -ggdb
 FLAGS=-O3 -Wall
 
-MAINS=Empar.o
+MAINS=build/Empar.o #
 
-TARGETS=$(patsubst %.o, %, $(MAINS))
-OBJ=$(filter-out $(MAINS),$(patsubst %.cpp,%.o,$(wildcard src/*.cpp)))
+TARGETS=$(patsubst build/%.o, %, $(MAINS)) #
+#OBJ=$(filter-out $(MAINS),$(patsubst %.cpp,%.o,$(wildcard src/*.cpp))) #
+OBJ=$(patsubst src/%.cpp, build/%.o,$(wildcard src/*.cpp)) #
 
 DEPS=$(wildcard src/*.h)
 SRC=$(wildcard src/*.cpp)
@@ -29,7 +30,7 @@ all: $(TARGETS)
 #	echo $(DEPS)
 
 # Rule for object files
-src/%.o: src/%.cpp $(DEPS)
+build/%.o: src/%.cpp $(DEPS) #
 	$(CXX) -c -o $@ $< $(CFLAGS)
 
 # Rule for targets
