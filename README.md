@@ -3,7 +3,7 @@
 
 ### Dependencies
 Current version uses Boost 1_61_0 (see the license).
-
+http://www.boost.org/doc/libs/1_61_0/more/getting_started/unix-variants.html#get-boost
 ### Compilation and command line use
 ```
 make
