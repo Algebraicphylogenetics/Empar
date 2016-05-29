@@ -24,8 +24,8 @@ CFLAGS=-I $(INC) $(FLAGS)
 
 all: $(TARGETS)
 
-debug:
-	echo $(DEPS)
+#debug:
+#	echo $(DEPS)
 
 # Rule for object files
 %.o: src/%.cpp $(DEPS)
@@ -40,4 +40,4 @@ clean:
 	rm -f src/*.o *~ $(TARGETS)
 
 src-pkg: $(TARGETS) $(DEPS)
-	tar czf MixPar.tar.gz $(FILES)
+	tar czf Empar.tar.gz $(FILES)
