@@ -2,15 +2,15 @@ CC=g++-5
 
 # FLAGS=-Wall
 # FLAGS=-Wall -ggdb
-FLAGS=-O3 -Wall 
+FLAGS=-O3 -Wall
 
 MAINS=Empar.o
 
-TARGETS=$(patsubst %.o,%,$(MAINS))
-OBJ=$(filter-out $(MAINS),$(patsubst %.cpp,%.o,$(wildcard *.cpp)))
+TARGETS=$(patsubst %.o, %, $(MAINS))
+OBJ=$(filter-out $(MAINS),$(patsubst %.cpp,%.o,$(wildcard src/*.cpp)))
 
-DEPS=$(wildcard *.h)
-SRC=$(wildcard *.cpp)
+DEPS=$(wildcard src/*.h)
+SRC=$(wildcard src/*.cpp)
 
 INC=include
 DATA=$(wildcard *.fa) $(wildcard *.tree)
@@ -24,8 +24,11 @@ CFLAGS=-I $(INC) $(FLAGS)
 
 all: $(TARGETS)
 
+debug:
+	echo $(DEPS)
+
 # Rule for object files
-%.o: %.cpp $(DEPS)
+%.o: src/%.cpp $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 # Rule for targets
@@ -34,6 +37,7 @@ $(TARGETS): %: %.o $(OBJ)
 
 
 clean:
-	rm -f *.o *~ $(TARGETS)
+	rm -f src/*.o *~ $(TARGETS)
+
 src-pkg: $(TARGETS) $(DEPS)
 	tar czf MixPar.tar.gz $(FILES)
