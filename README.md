@@ -2,7 +2,7 @@
 **Empar** is an implementation of an MLE method based on the EM algorithm for effective parameter estimation of the (discrete-time) Markov evolutionary models.
 
 ### Dependencies
-Current version uses Boost 1_61_0 ([boost source], see ( http://www.boost.org/LICENSE_1_0.txt)
+Current version uses Boost 1_61_0 (see the license).
 
 ### Compilation and command line use
 ```
