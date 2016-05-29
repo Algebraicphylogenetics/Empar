@@ -72,7 +72,7 @@ void string2state(std::string &str, State &sta) {
 void permute_state(std::vector<long> &d, State &sta1, State &sta2) {
   long i;
   if ((long) d.size() != sta1.len || sta1.len != sta2.len) {
-    std::cout << "Permutation and states are not compatible !" << std::cout;
+    std::cout << "Permutation and states are not compatible !" << std::endl;
     exit(-1);
   }
   for(i=0; i < sta1.len; i++) {

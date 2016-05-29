@@ -1,4 +1,5 @@
-CC=g++-5
+CXX=g++
+LD=g++
 
 # FLAGS=-Wall
 # FLAGS=-Wall -ggdb
@@ -28,12 +29,12 @@ all: $(TARGETS)
 #	echo $(DEPS)
 
 # Rule for object files
-%.o: src/%.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+src/%.o: src/%.cpp $(DEPS)
+	$(CXX) -c -o $@ $< $(CFLAGS)
 
 # Rule for targets
-$(TARGETS): %: %.o $(OBJ)
-	$(CC) -o $@ $< $(OBJ) $(CFLAGS)
+$(TARGETS): $(OBJ)
+	$(LD) -o $@ $^ $(LDFLAGS)
 
 
 clean:
