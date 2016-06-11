@@ -29,7 +29,7 @@ all: $(TARGETS)
 #	echo $(DEPS)
 
 # Rule for object files
-build/%.o: src/%.cpp $(DEPS) 
+build/%.o: src/%.cpp $(DEPS)
 	$(CXX) -c -o $@ $< $(CFLAGS)
 
 # Rule for targets
