@@ -5,7 +5,7 @@ LD=g++-5
 # FLAGS=-Wall -ggdb
 FLAGS=-O3 -Wall
 
-MAINS=build/Empar.o
+MAINS=build/main.o
 
 TARGETS=$(patsubst build/%.o, %, $(MAINS))
 OBJ=$(patsubst src/%.cpp, build/%.o,$(wildcard src/*.cpp)) #
