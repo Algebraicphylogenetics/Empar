@@ -6,12 +6,12 @@
  *  
  */
 
-#include<iostream>
-#include<cstdlib>
-#include<fstream>
-#include<ctime>
-#include<cmath>
-#include<list>
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
+#include <ctime>
+#include <cmath>
+#include <list>
 
 #include "em.h"
 #include "tree.h"
