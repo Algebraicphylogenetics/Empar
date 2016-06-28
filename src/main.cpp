@@ -27,5 +27,5 @@ int main(int argc, char* argv[]){
     exit(1);
   }
 
-  run(argv[0], argv[1], argv[2]);
+  run(argv[1], argv[2], argv[3]);
 }
