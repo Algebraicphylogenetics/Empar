@@ -1,2 +1,5 @@
 build/
 include/boost1.4.9/
+**/*.dat
+**/*.cov
+main
