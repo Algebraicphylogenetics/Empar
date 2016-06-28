@@ -19,7 +19,7 @@ OTHER=Makefile README
 
 FILES=$(SRC) $(DEPS) $(INC) $(DATA) $(OTHER)
 
-CFLAGS=-I $(INC) $(FLAGS)
+CFLAGS=-I $(INC) $(FLAGS) --std=c++11
 
 .PHONY: clean src-pkg
 
