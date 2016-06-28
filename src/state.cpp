@@ -1,15 +1,16 @@
 /*
  *  state.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include <iostream>
 #include <cstdlib>
 
 #include "state.h"
+#include <stdexcept>
 
 // creates a state of given length and ginven number of letters.
 void create_state(State &sta, long length, long nalpha) {
@@ -47,8 +48,7 @@ void state2string(State &sta, std::string &str) {
       str.push_back(bases[sta.s[i]]);
     }
   } else {
-    std::cout << "Can't convert a state with more than 4 letters to a string." << std::endl;
-    exit(1);
+    throw std::out_of_range("Can't convert a state with more than 4 letters to a string." );
   }
 }
 
@@ -72,11 +72,9 @@ void string2state(std::string &str, State &sta) {
 void permute_state(std::vector<long> &d, State &sta1, State &sta2) {
   long i;
   if ((long) d.size() != sta1.len || sta1.len != sta2.len) {
-    std::cout << "Permutation and states are not compatible !" << std::endl;
-    exit(-1);
+    throw std::out_of_range("Permutation and states are not compatible !" );
   }
   for(i=0; i < sta1.len; i++) {
     sta2.s[d[i]] = sta1.s[i];
-  } 
+  }
 }
-

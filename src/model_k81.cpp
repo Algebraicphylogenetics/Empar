@@ -1,9 +1,9 @@
 /*
  *  model_k81.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include "model_k81.h"
@@ -14,6 +14,8 @@
 #include <algorithm>
 
 #include "miscelania.h"
+
+#include <stdexcept>
 
 
 //////////////////////////////////////////////////////////////////
@@ -51,8 +53,7 @@ long K81_matrix_structure(long i, long j) {
   else if ((i+j) % 2 == 0) return 2;
   else if (i+j == 3) return 3;
   else {
-    std::cout << "ERROR: unknown condition in K81_matrix_structure." << std::endl;
-    exit(1);
+    throw std::range_error("ERROR: unknown condition in K81_matrix_structure." );
   }
 }
 

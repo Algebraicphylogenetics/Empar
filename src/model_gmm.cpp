@@ -1,9 +1,9 @@
 /*
  *  model_gmm.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 
@@ -22,6 +22,9 @@
 #include "expm.hpp"
 
 #include "miscelania.h"
+
+#include <stdexcept>
+
 
 //////////////////////////////////////////////////////////////////
 // This file implements functions specific to the GMM model
@@ -164,7 +167,7 @@ void GMM_random_stochastic_vector4(std::vector<double> &v) {
   for (long i=0; i < 3; i++) {
     v[i] = s*v[i];
   }
-  v[3] = 1 - s; 
+  v[3] = 1 - s;
 }
 
 
@@ -243,7 +246,7 @@ void GMM_random_edge_length(double len, TMatrix &tm) {
 
   t = uniform_real(-4*len, 0);
   GMM_random_rate_matrix(t, Q);
-  GMM_matrix_exponential(Q, A);  
+  GMM_matrix_exponential(Q, A);
 
   SSM_random_edge_length(len + t/4, B);
 
@@ -284,11 +287,9 @@ void GMM_random_edge_bio_length(double len, TMatrix &tm) {
 
     timeout++;
   } while(!(is_permutation(p) && permutation_sign(p) == 1) && (timeout < 1000));
-  
+
   if (timeout >= 1000) {
-    std::cout << "ERROR: In sampling for GMM model. Can't generate DLC matrix of length " << len;
-    std::cout << std::endl;
-    exit(1);
+    throw std::length_error("ERROR: In sampling for GMM model. Can't generate DLC matrix of length " );
   }
 
   for(j=0; j < 4; j++) {

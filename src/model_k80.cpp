@@ -1,9 +1,9 @@
 /*
  *  model_k80.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include "model_k80.h"
@@ -14,6 +14,8 @@
 #include <algorithm>
 
 #include "miscelania.h"
+
+#include <stdexcept>
 
 //////////////////////////////////////////////////////////////////
 // This file implements functions specific to K80*, 4 states
@@ -49,8 +51,7 @@ long K80_matrix_structure(long i, long j) {
   else if ((i+j) % 2 == 0) return 2;
   else if (i+j == 3) return 1;
   else {
-    std::cout << "ERROR: unknown condition in K80_matrix_structure." << std::endl;
-    exit(1);
+    throw std::range_error("ERROR: unknown condition in K80_matrix_structure.");
   }
 }
 
@@ -180,9 +181,7 @@ void K80_random_edge_bio_length(double len, TMatrix &tm) {
   } while(!(i0 == 0 || i0 == 2) && timeout < 1000);
 
   if (timeout >= 1000) {
-    std::cout << "ERROR: In sampling for K80 model. Can't generate DLC matrix of length " << len;
-    std::cout << std::endl;
-    exit(1);
+    throw std::range_error("ERROR: In sampling for K80 model. Can't generate DLC matrix of length " );
   }
 
   K80_matrix(tmaux[i0][0], tmaux[i0][1], tmaux[i0][2], tm);

@@ -1,10 +1,10 @@
 
 /*
  *  model_ssm.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include "model_ssm.h"
@@ -15,6 +15,7 @@
 #include <algorithm>
 #include "miscelania.h"
 
+#include <stdexcept>
 
 //////////////////////////////////////////////////////////////////
 // Functions specific to the Strand Symmetric model, 4 states
@@ -50,7 +51,7 @@ long SSM_matrix_structure(long i, long j) {
   if (i > 1) {
     i = 3 - i;
     j = 3 - j;
-  }  
+  }
 
   if (i == 0 && j == 0) return 0;
   else if (i == 0 && j == 1) return 1;
@@ -61,8 +62,7 @@ long SSM_matrix_structure(long i, long j) {
   else if (i == 1 && j == 2) return 6;
   else if (i == 1 && j == 3) return 7;
   else {
-    std::cout << "ERROR: unknown condition in K81_matrix_structure." << std::endl;
-    exit(1);
+    throw std::range_error( "ERROR: unknown condition in K81_matrix_structure." );
   }
 }
 
@@ -179,7 +179,7 @@ void SSM_random_root(Root &r) {
 void SSM_random_edge(TMatrix &tm) {
   SSM_random_row(tm[0]);
   SSM_random_row(tm[1]);
-  
+
   tm[3][0] = tm[0][3];
   tm[3][1] = tm[0][2];
   tm[3][2] = tm[0][1];
@@ -199,7 +199,7 @@ void SSM_random_edge_length(double len, TMatrix &tm) {
 
   K = exp(-4*len);
 
-  v0 = 1./3.*pow(3.*sqrt(81.*K*K + 3.) + 27.*K, 1./3.) 
+  v0 = 1./3.*pow(3.*sqrt(81.*K*K + 3.) + 27.*K, 1./3.)
      - 1./3.*pow(3.*sqrt(81.*K*K + 3.) - 27.*K, 1./3.);
   s = uniform_real(v0+1, 2);
   rk = (s-1)*(s-1)*(s-1) + (s-1) - 2*K;
@@ -220,7 +220,7 @@ void SSM_random_edge_length(double len, TMatrix &tm) {
 
   gamma = uniform_real(0,1);
   if (gamma > 0.5) betap = -betap;
-  
+
   alphap = (alpha*beta - K/(lambda + mu - 1)) / betap;
   a = 0.5*(lambda + beta);
   b = 0.5*(1 - lambda - betap);
@@ -269,16 +269,14 @@ void SSM_random_edge_bio_length(double len, TMatrix &tm) {
     i0 = max_in_col(tmaux, 0);
     i1 = max_in_col(tmaux, 1);
     timeout++;
-  } while (!((i0 == 0 && i1 == 1) || (i0 == 1 && i1 == 0) || 
+  } while (!((i0 == 0 && i1 == 1) || (i0 == 1 && i1 == 0) ||
              (i0 == 2 && i1 == 3) || (i0 == 3 && i1 == 2)) &&
              (timeout < 1000));
 
   if (timeout >= 1000) {
-    std::cout << "ERROR: In sampling for SSM model. Can't generate DLC matrix of length " << len;
-    std::cout << std::endl;
-    exit(1);
+    throw std::range_error( "ERROR: In sampling for SSM model. Can't generate DLC matrix of length ");
   }
 
   SSM_matrix(tmaux[i0][0], tmaux[i0][1], tmaux[i0][2], tmaux[i0][3],
-             tmaux[i1][0], tmaux[i1][1], tmaux[i1][2], tmaux[i1][3], tm);  
+             tmaux[i1][0], tmaux[i1][1], tmaux[i1][2], tmaux[i1][3], tm);
 }

@@ -1,9 +1,9 @@
 /*
  *  fisher.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include <cstdlib>
@@ -21,6 +21,9 @@
 #include <boost/numeric/ublas/triangular.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 #include <boost/numeric/ublas/io.hpp>
+
+#include <stdexcept>
+
 
 namespace ublas = boost::numeric::ublas;
 
@@ -62,7 +65,7 @@ long erc2freeparam(Tree &T, Model &Mod, long e, long r, long c) {
         if (b > a) return e*Mod.df + p - a - 1;
         else if (b < a) return e*Mod.df + p - a;
         else return -1;
-        
+
       }
     }
   }
@@ -182,7 +185,7 @@ void fill_pcond1(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array2 &pc
   // Loop over all states
   for (i=0; i < T.nstleaves; i++) {
     for(j=0; j < T.nsthidden; j++) {
-      
+
       // Loop over edges
       for(e=0; e < T.nedges; e++) {
 
@@ -261,7 +264,7 @@ void fill_pcond2(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array3 &pc
 
           edgestate(T, ep, sl.h[j], sl.l[i], ap, bp);
           kp = erc2param(T, Mod, ep, ap, bp);
-      
+
           pcond2[i][k][kp] = pcond2[i][k][kp] + p;
         }
       }
@@ -280,7 +283,7 @@ void fill_pcond2(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array3 &pc
         k = erc2param(T, Mod, e, a, b);
 
         kp = root2param(T, Mod, rootstate(T, sl.h[j]));
-  
+
         pcond2[i][k][kp] = pcond2[i][k][kp] + p;
         pcond2[i][kp][k] = pcond2[i][kp][k] + p;
       }
@@ -288,7 +291,7 @@ void fill_pcond2(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array3 &pc
       // Recall: In pcond2 with two root parameters k and kp,
       // we always have p(I and k and kp) = 0.
     }
-  }  
+  }
 }
 
 
@@ -358,7 +361,7 @@ void get_free_param_vector(Tree &T, Model &Mod, Parameters &Par, std::vector<dou
 
 
 // Computes the observed Fisher information of all Parameters in Par, on the model with
-// hidden nodes and stores them in the matrix Imod ( no approximation, so the matrix is not diagonal). 
+// hidden nodes and stores them in the matrix Imod ( no approximation, so the matrix is not diagonal).
 // The rows and columns of Imod are indexed by a number between 0 and np*nedges + rdf + 1, encoding the free parameters
 // of the model. The stochastic condition is not taken into account.
 
@@ -370,7 +373,7 @@ void get_free_param_vector(Tree &T, Model &Mod, Parameters &Par, std::vector<dou
 // Here p_k denotes the value of the parameter k.
 
 // The observed Fisher info, is given by the same formula, but inside the sum must add the factor
-// x_I / N*p(I). 
+// x_I / N*p(I).
 
 void Fisher_information_model(Tree &T, Model &Mod, Parameters &Par, long N, Counts *data, Array2 &Imod) {
   long i, j, k;
@@ -400,8 +403,8 @@ void Fisher_information_model(Tree &T, Model &Mod, Parameters &Par, long N, Coun
   }
 
   if (data != NULL && data->nspecies != T.nleaves) {
-    std::cout << "ERROR: In Fisher_information_model. Counts don't match the tree." << std::endl;
-    exit(-1);
+    throw std::length_error("ERROR: In Fisher_information_model. Counts don't match the tree.");
+
   }
 
   create_state_list(sl, T);
@@ -445,7 +448,7 @@ void Fisher_information_model(Tree &T, Model &Mod, Parameters &Par, long N, Coun
 // Ifree has df*nedges + rdf rows and columns.
 
 // Here np means number of parameters, while df means degrees of freedom. For
-// example, K81 has np = 4 and df = 3. SSM has np = 8 and df = 6. The fact that SSM has two 
+// example, K81 has np = 4 and df = 3. SSM has np = 8 and df = 6. The fact that SSM has two
 // stochastic constraints instead of one, means that SSM must be treated separately.
 
 void Fisher_information_free(Tree &T, Model &Mod, Array2 &Imod, Array2 &Ifree) {
@@ -530,7 +533,7 @@ void Fisher_information_free(Tree &T, Model &Mod, Array2 &Imod, Array2 &Ifree) {
 
 // Computes the fisher information for the model with hidden nodes, and stores the result in I.
 // I is a matrix with df*nedges + rdf rows and cols.
-// the index for the rows and columns encodes a free parameter. 
+// the index for the rows and columns encodes a free parameter.
 // 0: first free param on edge 0
 // 1: second free param on edge 0
 // ...
@@ -584,7 +587,7 @@ void full_MLE_covariance_matrix(Tree &T, Model &Mod, Parameters &Par, long N, Ar
   ublas::matrix<double> II(npars, npars);
   Array2 I;
 
-  Fisher_information(T, Mod, Par, N, I);    
+  Fisher_information(T, Mod, Par, N, I);
 
   // Need to convert from Matrix to ublas::matrix<double>
   for(i=0; i < npars; i++) {
@@ -595,8 +598,7 @@ void full_MLE_covariance_matrix(Tree &T, Model &Mod, Parameters &Par, long N, Ar
 
   bool res = matrix_inverse(II, CC);
   if (!res) {
-    std::cout << "Could not invert the Fisher information matrix." << std::endl;
-    exit(1);
+    throw std::out_of_range( "Could not invert the Fisher information matrix." );
   }
 
   Cov.resize(npars);
@@ -618,7 +620,7 @@ void full_MLE_observed_covariance_matrix(Tree &T, Model &Mod, Parameters &Par, C
   ublas::matrix<double> II(npars, npars);
   Array2 I;
 
-  Observed_Fisher_information(T, Mod, Par, data, I);    
+  Observed_Fisher_information(T, Mod, Par, data, I);
 
   // Need to convert from Matrix to ublas::matrix<double>
   for(i=0; i < npars; i++) {
@@ -629,8 +631,7 @@ void full_MLE_observed_covariance_matrix(Tree &T, Model &Mod, Parameters &Par, C
 
   bool res = matrix_inverse(II, CC);
   if (!res) {
-    std::cout << "Could not invert the Fisher information matrix." << std::endl;
-    exit(1);
+    throw std::out_of_range("Could not invert the Fisher information matrix.");
   }
 
   Cov.resize(npars);
@@ -673,8 +674,7 @@ void branch_inverted_covariance_matrix(Model &Mod, Array2 &Covfull, long b, Arra
 
   bool res = matrix_inverse(CC, II);
   if (!res) {
-    std::cout << "Could not invert the Covariance matrix." << std::endl;
-    exit(1);
+    throw std::out_of_range( "Could not invert the Covariance matrix." );
   }
 
   Covbri.resize(Mod.df);
@@ -685,4 +685,3 @@ void branch_inverted_covariance_matrix(Model &Mod, Array2 &Covfull, long b, Arra
     }
   }
 }
-

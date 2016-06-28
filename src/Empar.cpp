@@ -1,9 +1,9 @@
 /*
  *  Empar.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include <iostream>
@@ -13,7 +13,9 @@
 #include <cmath>
 #include <list>
 #include <string>
+#include <stdexcept>
 
+#include "Empar.h"
 #include "em.h"
 #include "tree.h"
 #include "parameters.h"
@@ -37,7 +39,7 @@ bool nonident_warning(Tree &T) {
     if(valence(T, i) == 2) {
       Lnon.push_back(i);
     }
-    
+
     // A root of valence 1 leads to nonident.
     if(valence(T, i) == 1 && i == T.nleaves) {
       Lnon.push_back(i);
@@ -73,7 +75,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   double eps = 1e-8;         // The threshold for the EM algorithm.
 
   Parameters Parsim;         // used for simulating data.
-  std::vector<double> brsim; // branch lengths of simulated data. 
+  std::vector<double> brsim; // branch lengths of simulated data.
 
   std::vector<std::vector<double> > Cov;  // Covariance matrix
   std::vector<double> variances;          // The variances
@@ -95,11 +97,11 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   std::cout << "Model: " << Mod.name << std::endl;
 
   // Reads the tree.
-  read_tree(T, tree_filename);      
+  read_tree(T, tree_filename);
 
   // Prints the Tree
   std::cout << "Tree:" << std::endl;
-  print_tree(T);                    
+  print_tree(T);
 
   // Check for possible nonidentifiability issues.
   nonident = nonident_warning(T);
@@ -134,11 +136,10 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
     add_pseudocounts(0.01, data);
     std::cout << std::endl;
   }
- 
+
   // Check whether the data and the tree match.
   if (T.nalpha != data.nalpha || T.nleaves != data.nspecies) {
-    std::cout << "The order of the sequences or their number and the phylogenetic tree do not match." << std::endl;
-    exit(1);
+    throw std::invalid_argument("The order of the sequences or their number and the phylogenetic tree do not match.");
   }
 
   // Assigns memory for the parameters.
@@ -159,7 +160,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   // Runs the EM algorithm. Par is used as initial parameters.
   // After execution, Par contains the MLE computed by the algorithm.
   EMalgorithm(T, Mod, Par, data, eps);
-  
+
   // Choses the best permutation.
   guess_permutation(T, Mod, Par);
 
@@ -168,7 +169,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
   // Compute branch lengths
   branch_lengths(Par, br);
-  
+
   // If parameters are not identifiable, the computation of the covariance matrix will
   // fail as the Fisher info matrix will not be invertible.
   if (!nonident) {
@@ -223,7 +224,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   if (!simulate) {
     std::fstream st;
     st.precision(15);
-    st.setf(std::ios::fixed,std::ios::floatfield); 
+    st.setf(std::ios::fixed,std::ios::floatfield);
     st.open(parameters_filename.c_str(), std::ios::out);
     print_parameters(Par, st);
   }

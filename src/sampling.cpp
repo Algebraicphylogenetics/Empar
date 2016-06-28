@@ -1,9 +1,9 @@
 /*
  *  sampling.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include <iostream>
@@ -14,14 +14,16 @@
 #include "miscelania.h"
 #include "em.h"
 
+#include <stdexcept>
+
+
 #include "boost/math/distributions/chi_squared.hpp"
 
 // Produces random parameters without length restriction.
 void random_parameters(Model &Mod, Parameters &Par){
   long k;
   if (Par.nalpha != Mod.nalpha) {
-    std::cout << "Number of states in model does not match parameters";
-    exit(1);
+    throw std::out_of_range( "Number of states in model does not match parameters");
   }
   for(k=0; k < Par.nedges; k++) {
     Mod.random_edge(Par.tm[k]);
@@ -37,13 +39,13 @@ void random_parameters_length(Tree &T, Model &Mod, Parameters &Par){
   long k;
 
   if (Par.nalpha != Mod.nalpha) {
-    std::cout << "Number of states in model does not match parameters";
-    exit(1);
+    throw std::length_error("Number of states in model does not match parameters");
+
   }
 
   if (T.nedges != Par.nedges) {
-    std::cout << "Number of edges in tree does not match parameters";
-    exit(1);
+    throw std::length_error( "Number of edges in tree does not match parameters");
+
   }
 
   for(k=0; k < Par.nedges; k++) {
@@ -62,14 +64,14 @@ void random_fake_counts(Tree &T, double N, Counts &data, Parameters &Parsim) {
   // Fills in simulated counts
   data.N = 0;
   data.c.resize(T.nstleaves);         // assigns memory
-  for (i=0; i < T.nstleaves; i++) {   
+  for (i=0; i < T.nstleaves; i++) {
     data.c[i] = N*joint_prob_leaves(T, Parsim, i);
     data.N = data.N + data.c[i];
   }
 
   // Copies species names.
   data.species.resize(T.nleaves);     // assigns memory
-  for (i=0; i < T.nleaves; i++) {     
+  for (i=0; i < T.nleaves; i++) {
     data.species[i] = T.names[i];
   }
 
@@ -176,7 +178,7 @@ void random_data(Tree &T, Model &Mod, Parameters &Par, long length, Alignment &a
     random_state(T, Mod, Par, st);
     for (j=0; j < align.nspecies; j++) {
       // the first nleaves nodes are the leaves
-      align.seq[j][i] = st.s[j];    
+      align.seq[j][i] = st.s[j];
     }
   }
 }

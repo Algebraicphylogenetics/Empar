@@ -1,9 +1,9 @@
 /*
  *  tree.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 
@@ -11,6 +11,7 @@
 #include <fstream>
 #include <list>
 #include <algorithm>
+#include <stdexcept>
 
 #include "Newickform.h"
 #include "seqUtil.h"
@@ -37,7 +38,7 @@ void flatten_tree(newick_node* root, std::list<newick_node*> &Lleafs, std::list<
   while (ch != NULL) {
     flatten_tree(ch->node, Lleafs, Lhidden);
     ch = ch->next;
-  }  
+  }
 }
 
 
@@ -59,7 +60,7 @@ void list_edges(std::vector<newick_node*> &nodes, std::list<Edge> &edges) {
       edges.push_back(e);
       ch = ch->next;
     }
-  }  
+  }
 }
 
 
@@ -78,9 +79,8 @@ void read_tree(Tree &T, std::string fname, long nalpha) {
   ftree.open(fname.c_str(), std::fstream::in);
   tree_string = "";
   if (!ftree.is_open()) {
-    std::cout << "Cannot open the tree file." << std::endl;
-    exit(1);
-  } 
+    throw std::invalid_argument("Cannot open the tree file.");
+  }
   while (!ftree.eof()) {
     // read a line
     ftree >> line;
@@ -90,13 +90,13 @@ void read_tree(Tree &T, std::string fname, long nalpha) {
   }
   ftree.close();
 
-  // copies the C++ string into a C-style string for the parser 
+  // copies the C++ string into a C-style string for the parser
   char *cstr = new char[tree_string.size()+1];
    std::copy(tree_string.begin(), tree_string.end(), cstr);
    cstr[tree_string.size()] = '\0';
 
   // parses the string
-  root = parseTree(cstr); 
+  root = parseTree(cstr);
 
   // releases memory for the C string.
   delete[] cstr;
@@ -192,7 +192,7 @@ void list_outgoing_edges(Tree &T, long node, std::list<long> &L) {
   L.clear();
   for(long e=0; e < T.nedges; e++) {
     if (T.edges[e].s == node) {
-      L.push_back(e);  
+      L.push_back(e);
     }
   }
 }
@@ -215,7 +215,7 @@ void print_newick_tree_rec(Tree &T, std::vector<double> br, long root) {
         print_newick_tree_rec(T, br, T.edges[e].t);
 	std::cout << ":" << br[e];
         first = false;
-      } 
+      }
     }
     std::cout << ")";
   }

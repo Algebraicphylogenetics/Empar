@@ -1,9 +1,9 @@
 /*
  *  parameter_test.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 // as in parameter.cpp, this file contains additional functions I used for testing and getting a feel of the problem.
 
@@ -28,6 +28,7 @@
 #include <fstream>
 #include <list>
 
+#include <stdexcept>
 
 // Those values should be read from a file, here they were calculated prior to the simulations
 double get_scale_constant(Model &Mod) {
@@ -38,11 +39,11 @@ double get_scale_constant(Model &Mod) {
   else return 0;
 }
 
-// multinomial sampling	
+// multinomial sampling
 
 // p: vector with probabilities
 // N: length of the sampled vector
-// x: output vector with a single multinomial sample of length p.size(), 
+// x: output vector with a single multinomial sample of length p.size(),
 // the entry x[s] is the count for the state s and these entries add up to N.
 
 void multinomial_sample(std::vector<double> &p, long N, std::vector<double> &x) {
@@ -52,14 +53,14 @@ void multinomial_sample(std::vector<double> &p, long N, std::vector<double> &x) 
 	for (i=0; i < p.size(); i++) {
 		x[i] = 0;
 	}
-	
+
 	for(long j=0; j < N; j++) {
 		s = discrete(p);
 		//std::cout << "sample: " << s << "             \n";
-		
+
 		x[s]++;
 	}
-	
+
 }
 
 
@@ -72,8 +73,7 @@ void KL_divergence_edges(Tree &T, Model &Mod, Parameters &Par1, Parameters &Par2
 
 	//if unimplemented modelwas called
   if (Mod.m != JC && Mod.m != K80  && Mod.m != K81  && Mod.m != SSM) {
-    std::cout << "ERROR: KL_divergence_edges not implemented for this model." << std::endl;
-    exit(-1);
+    throw std::range_error( "ERROR: KL_divergence_edges not implemented for this model.");
   }
 
   KL.resize(T.nedges);
@@ -86,7 +86,7 @@ void KL_divergence_edges(Tree &T, Model &Mod, Parameters &Par1, Parameters &Par2
         d = 0;
       }
       dacc = dacc + d;
-    } 
+    }
 
     if (Mod.m == SSM) {
       for (i=0; i < T.nalpha; i++) {
@@ -107,14 +107,14 @@ void KL_divergence_edges(Tree &T, Model &Mod, Parameters &Par1, Parameters &Par2
 double chi2_mult(std::vector<double> &mu, std::vector<double> &x, Array2 &Covbr){
   double X = 0.0;
   for(unsigned int i=0; i < mu.size(); i++) {
-    for(unsigned int j=0; j < mu.size(); j++) {		
+    for(unsigned int j=0; j < mu.size(); j++) {
       X = X + Covbr[j][i]*(x[i] - mu[i])*(x[j] - mu[j]);
     }
   }
-  return X;	
+  return X;
 }
-	
-	
+
+
 bool double_pointer_comparison(const double *a, const double *b) {
   return *a < *b;
 }
@@ -142,7 +142,7 @@ void BH(std::vector<double> &pvals, std::vector<double> &qvals) {
 	     // Here corrects p-values using the sorted vector of pointers pval_p.
         // *(pvals_p[i]) is the value of the i-th smallest number in qvals,
         // moreover, modifying its value here, changes it in the vector qvals.
-	
+
 	for(i=n-2; i >= 0; i--) {
 	  *(pvals_p[i]) = *(pvals_p[i]) * ((double)n/(double)(i+1));
 	  if (*(pvals_p[i]) > *(pvals_p[i+1])) *(pvals_p[i]) = *(pvals_p[i+1]);
@@ -168,12 +168,12 @@ double Fisher_combined_pvalue(std::vector<double> &pvals) {
 
   // We compute the Fisher's statistic
   X2 = 0;
-  for (i=0; i < n; i++) { 
+  for (i=0; i < n; i++) {
     X2 = X2 + -2*log(pvals[i]);
   }
 
   // Return the p-value of Fisher's statistc
-  return pvalue_chi2(X2, 2*n);  
+  return pvalue_chi2(X2, 2*n);
 }
 
 
@@ -204,18 +204,18 @@ double Zscore_combined_pvalue(std::vector<double> &pvals) {
 
   unsigned long i;
   double z, zcomb, pcomb;
-  
+
   zcomb = 0.;
   for (i=0; i < pvals.size(); i++) {
 
     // If some p-value is 0, the score will be 0.
     if (pvals[i] <= 0) {
-      return 0; 
+      return 0;
     }
 
     // If some p-value is 1, the score will be 1.
     if (pvals[i] >= 1) {
-      return 1; 
+      return 1;
     }
 
     z = sqrt(2)*boost::math::erf_inv(2*(1-pvals[i]) - 1);       // Sure ???
@@ -233,7 +233,7 @@ double Zscore_combined_pvalue(std::vector<double> &pvals) {
 // Nrep:    Number of repetitions
 // length:  Length of the alignment of simulated data
 // pvals:   Vector of p-values indexed by the edges in T
-// data_prefix: If different from != "" stores the output data 
+// data_prefix: If different from != "" stores the output data
 
 void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std::vector<double> &pvals, std::string data_prefix, bool save_mc_exact){
 
@@ -245,8 +245,8 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
 	KL=0;
 	distance=0;
   double likel;
-   
-	
+
+
   Parameters Parsim, Par, Par_noperm;
   Alignment align;
   Counts data;
@@ -256,8 +256,8 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
   StateList sl;
 
   bool save_data = (data_prefix != "");
-  
-	
+
+
   std::string output_filename;
   std::stringstream output_index;
   std::ofstream logfile;
@@ -288,14 +288,14 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
   std::vector<std::vector<double> > cota_array; // an array of upper bounds of the diff in lengths for every edge.
   std::vector<std::vector<double> > pval_array; // an array of pvals for every edge.
   std::vector<std::vector<double> > pval_noperm_array;
-  std::vector<std::vector<double> > qval_array; // an array of qvalues for every edge.	
+  std::vector<std::vector<double> > qval_array; // an array of qvalues for every edge.
   std::vector<std::vector<double> > variances_array; // an array of theoretical variances.
   std::vector<std::vector<double> > parest_array; // array of estimated parameters
   std::vector<std::vector<double> > parsim_array; // array of simulation parameters
 
 	//  ci_binom ci_bin; // condfidence interval
   std::vector<std::vector<ci_binom> > CIbinomial ; //  	vector of CIs
-	
+
   std::list<long> produced_nan;
 
   long npars = T.nedges*Mod.df + Mod.rdf;
@@ -373,19 +373,19 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
     out_parest.precision(15);
     out_variances.precision(15);
   }
-		
-		
+
+
 	// uncomment the 2 following lines if want to fix the parameters
-	// random_parameters_length(T, Mod, Parsim);  
+	// random_parameters_length(T, Mod, Parsim);
 	 //random_data(T, Mod, Parsim, length, align);
 
   for (iter=0; iter < Nrep; iter++) {
     std::cout << "iteration: " << iter << "             \n";
 
     // Produces an alignment from random parameters
-    random_parameters_length(T, Mod, Parsim);  
-	  
-	  
+    random_parameters_length(T, Mod, Parsim);
+
+
     random_data(T, Mod, Parsim, length, align);
     get_counts(align, data);
     add_pseudocounts(eps_pseudo, data);
@@ -394,7 +394,7 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
     if (save_data) {
       output_index.str("");
       output_index << iter;
-      output_filename = data_prefix + "-" + output_index.str(); 
+      output_filename = data_prefix + "-" + output_index.str();
       save_alignment(align, output_filename + ".fa");
       save_parameters(Parsim, output_filename + ".sim.dat");
     }
@@ -417,18 +417,18 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
 
     // Chooses the best permutation.
     guess_permutation(T, Mod, Par);
- 
+
     distance = parameters_distance(Parsim, Par);
-    // tests using KL score:    
+    // tests using KL score:
 	// KL = KL_divergence_fast(T, Parsim, Par, sl);
     // KL = KL_divergence(T, Par, Parsim);
-	
-	 
+
+
       // estimated counts: Par ; original: Parsim
       std::vector<double> counts_est;
       counts_est.resize(T.nalpha, 0);
 
-		
+
       // calculate the cov matrix
       std::vector<std::vector<double> > Cov;
       Array2 Cov_br;
@@ -436,7 +436,7 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
       full_MLE_covariance_matrix(T, Mod, Parsim, length, Cov);
 
       if(save_data) {
-          save_matrix(Cov, output_filename + ".cov.dat");   	
+          save_matrix(Cov, output_filename + ".cov.dat");
       }
 
       // Save the covariances in an array
@@ -463,42 +463,42 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
       for (i=0; i < T.nedges; i++) {
 		  r = 0; // row to be fixed
 		  // Extracts the covariance matrix, 1 edge
-		  
+
 				  branch_inverted_covariance_matrix(Mod, Cov, i, Cov_br);
                   get_branch_free_param_vector(T, Mod, Parsim, i, mubranca);
                   get_branch_free_param_vector(T, Mod, Par, i, xbranca);
                   get_branch_free_param_vector(T, Mod, Par_noperm, i, xbranca_noperm);
-			  
-			      chi2_array[i][iter] = chi2_mult(mubranca, xbranca, Cov_br);	
+
+			      chi2_array[i][iter] = chi2_mult(mubranca, xbranca, Cov_br);
                   chi2_noperm = chi2_mult(mubranca, xbranca_noperm, Cov_br);
-		  
-		
-                  pval_array[i][iter] =  pvalue_chi2(chi2_array[i][iter], Mod.df);  
-                  pval_noperm_array[i][iter] = pvalue_chi2(chi2_noperm, Mod.df);             	  
+
+
+                  pval_array[i][iter] =  pvalue_chi2(chi2_array[i][iter], Mod.df);
+                  pval_noperm_array[i][iter] = pvalue_chi2(chi2_noperm, Mod.df);
 
 			      br_array[i][iter] = T.edges[i].br - branch_length(Par.tm[i], T.nalpha);
 				  br_arrayPerc[i][iter] = branch_length(Par.tm[i], T.nalpha)/T.edges[i].br;
 
 
 		// Upper bound on the parameter distance using multinomial:
-		//  cota_array[i][iter] = bound_mult(Parsim.tm[i], Xm, length); 
+		//  cota_array[i][iter] = bound_mult(Parsim.tm[i], Xm, length);
 	    // and using the  L2 bound
-		  cota_array[i][iter] = branch_length_error_bound_mult(Parsim.tm[i], Par.tm[i]);  
+		  cota_array[i][iter] = branch_length_error_bound_mult(Parsim.tm[i], Par.tm[i]);
 		  out_br <<  br_array[i][iter]  << " ";
 		  out_brPerc <<  br_arrayPerc[i][iter]  << " ";
-		  
+
 		  out_bound  <<  cota_array[i][iter] << " ";
 		  out_chi2 << chi2_array[i][iter] << " ";
-     			
+
 			}
-         out_chi2 << std::endl;		
-		 out_bound  <<  std::endl; 
+         out_chi2 << std::endl;
+		 out_bound  <<  std::endl;
 		 out_br << std::endl;
 		 out_brPerc << std::endl;
- 
 
 
-	
+
+
     // Saves more data.
     if (save_data) {
       logfile << iter << ": " << distance << "   " << KL << std::endl;
@@ -511,7 +511,7 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
       }
       logdistfile << std::endl;
     }
-  
+
 } // close iter loop here
 
   // Correct the p-values
@@ -540,16 +540,16 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
       out_parsim << std::endl;
       out_parest << std::endl;
     }
-  }		
-	
+  }
+
 	// now combine the pvalues
-   for(i=0; i < T.nedges; i++) {		
+   for(i=0; i < T.nedges; i++) {
 	pvals[i] = Fisher_combined_pvalue(pval_array[i]);
     //using the Zscore it goes like this: pvals[i] = Zscore_combined_pvalue(pval_array[i]);
 	if (save_mc_exact) {	   out_qvalsComb <<  pvals[i] << "  " ;
-	out_qvalsCombzscore << Zscore_combined_pvalue(pval_array[i]) << " "; 
+	out_qvalsCombzscore << Zscore_combined_pvalue(pval_array[i]) << " ";
 	}
-  } 
+  }
 
   // Close files
   if (save_data) {
@@ -558,7 +558,7 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
   }
 
 if (save_mc_exact) {
-	out_chi2.close();		
+	out_chi2.close();
 	out_bound.close();
         out_variances.close();
         out_parest.close();
@@ -593,8 +593,8 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
   long iter;
 
   double likel;
-   
-	
+
+
   Parameters Par;
   Alignment align;
   Counts data;
@@ -605,7 +605,7 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
   create_parameters(Par, T);
 
   // Obtaining the distribution of estimated parameters with EM
-  
+
   std::ofstream estpar;
   estpar.open("est-par.dat", std::ios::out);
   estpar.precision(15);
@@ -634,7 +634,3 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
   }
 
 }
-
-
-
-

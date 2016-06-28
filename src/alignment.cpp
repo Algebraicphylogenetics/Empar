@@ -1,9 +1,9 @@
 /*
  *  alignment.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include <iostream>
@@ -14,7 +14,7 @@
 #include "seqUtil.h"
 #include "read_fasta.h"
 
-
+#include <stdexcept>
 
 
 // Cleans a species name. Removes initial '>' and the '\n'.
@@ -27,8 +27,8 @@ std::string clean_species_name(std::string str) {
     if (str[i] == '\n')         i1 = i-1;
   }
   if (i0 > i1) {
-    std::cout << "Don't understand species name!" << std::endl;
-    exit(1);
+    throw std::invalid_argument("Unmatched species name");
+
   }
   return str.substr(i0, i1-i0 + 1);
 }
@@ -50,7 +50,7 @@ bool match_species(Tree &T, std::string *s, int ns, std::vector<long> &d) {
 
   // build the map.
   d.resize(T.nleaves);
-  for (i=0; i < T.nleaves; i++){  
+  for (i=0; i < T.nleaves; i++){
     sname = clean_species_name(s[i]);
     found = false;
     for (j=0; j < T.nleaves; j++) {
@@ -62,7 +62,7 @@ bool match_species(Tree &T, std::string *s, int ns, std::vector<long> &d) {
     }
     if (!found) {
       std::cout << "There's a species in the fasta which is not a leaf in the tree." << std::endl;
-      return false; 
+      return false;
     }
   }
 
@@ -77,7 +77,7 @@ bool match_species(Tree &T, std::string *s, int ns, std::vector<long> &d) {
     }
     if (!found) {
       std::cout << "There's a species in the tree which is not present in the fasta file." << std::endl;
-      return false; 
+      return false;
     }
   }
 
@@ -85,9 +85,9 @@ bool match_species(Tree &T, std::string *s, int ns, std::vector<long> &d) {
 }
 
 
-// Reads the counts from a fasta file using the routines in read_fasta.cpp. 
+// Reads the counts from a fasta file using the routines in read_fasta.cpp.
 // Then formats the data as we want and stores it into the Counts data structure.
-// Uses the order of the leaves on Tree for encoding the states. 
+// Uses the order of the leaves on Tree for encoding the states.
 
 void read_counts(Tree &T, Counts &data, std::string fname, long nalpha) {
   int i;
@@ -98,7 +98,7 @@ void read_counts(Tree &T, Counts &data, std::string fname, long nalpha) {
   std::vector<long> d;
 
   // The number of letters is fixed to 4 in read_fasta.
-  if (nalpha != 4) {    
+  if (nalpha != 4) {
     std::cout << "Reading counts only implemented for 4 letters." << std::endl;
   }
 
@@ -121,8 +121,7 @@ void read_counts(Tree &T, Counts &data, std::string fname, long nalpha) {
 
   // Matches the species in the fasta with the ones in the tree.
   if (!match_species(T, g_nameSpecies, g_numSpecies, d)) {
-    std::cout << "Could not match species in tree with species in fasta." << std::endl;
-    exit(-1);
+    throw std::length_error( "Could not match species in tree with species in fasta." );
   }
 
   // Stores the counts in the Counts structure.
@@ -270,4 +269,3 @@ void save_alignment(Alignment &al, std::string const &fname) {
   print_alignment(al, ffile);
   ffile.close();
 }
-

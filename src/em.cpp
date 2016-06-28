@@ -1,9 +1,9 @@
 /*
  *  em.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 
@@ -15,9 +15,12 @@
 #include "matrix.h"
 #include "miscelania.h"
 
+#include <stdexcept>
+
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //
-// This block contains joint_prob that compute joint probabilities from the parameters, 
+// This block contains joint_prob that compute joint probabilities from the parameters,
 // together with some other functions that use joint_prob.
 // This version does not need a precomputed list of states, so it is easier to use,
 //  but because it uses index2state very intensively, it is slower than the version below.
@@ -36,7 +39,7 @@ double joint_prob(Tree &T, Parameters &Par, long idleaf, long idhid) {
   index2state(idhid, T.shidden);
   index2state(idleaf, T.sleaves);
 
-  // root distribution. The root is the first hidden node 
+  // root distribution. The root is the first hidden node
   p = Par.r[T.shidden.s[0]];
 
   // product of transition matrices
@@ -69,8 +72,8 @@ double log_likelihood(Tree &T, Parameters &Par, Counts &data) {
   double l;
   long i;
   if (data.nstates != T.nstleaves) {
-    std::cout << "Error: Wrong data length in log_likelihood" << std::endl;
-    exit(1);
+    throw std::out_of_range("Wrong data length in log_likelihood");
+
   }
 
   l = 0;
@@ -81,7 +84,7 @@ double log_likelihood(Tree &T, Parameters &Par, Counts &data) {
 }
 
 
-// Computes the KL divergence between two sets of parameters. 
+// Computes the KL divergence between two sets of parameters.
 double KL_divergence(Tree &T, Parameters &Par1, Parameters &Par2) {
   long i;
   double KL, p1, p2;
@@ -102,7 +105,7 @@ double entropy(Tree &T, Parameters &Par) {
   E = 0;
   for (i=0; i < T.nstleaves; i++) {
     p = joint_prob_leaves(T, Par, i);
-    if (p == 0) continue;      // 0log0 = 0 
+    if (p == 0) continue;      // 0log0 = 0
     E = E - p*log(p);
   }
   return E;
@@ -157,8 +160,7 @@ double log_likelihood_fast(Tree &T, Parameters &Par, Counts &data, StateList &sl
   double l;
   long i;
   if (data.nstates != T.nstleaves) {
-    std::cout << "Error: Wrong data length in log_likelihood" << std::endl;
-    exit(1);
+    throw std::length_error( "Error: Wrong data length in log_likelihood" );
   }
 
   l = 0;
@@ -176,7 +178,7 @@ double KL_divergence_fast(Tree &T, Parameters &Par1, Parameters &Par2, StateList
   for (i=0; i < T.nstleaves; i++) {
     p1 = joint_prob_leaves_fast(T, Par1, sl, i);
     p2 = joint_prob_leaves_fast(T, Par2, sl, i);
-    if (p1 == 0 && p2 == 0) continue;      // 0log0 = 0 
+    if (p1 == 0 && p2 == 0) continue;      // 0log0 = 0
     KL = KL + p1*log(p1/p2);
   }
   return KL;
@@ -258,7 +260,7 @@ void one_node_marginalization(Tree &T, Matrix &F, long a, StateList &sl, Root &s
 // Uses the EM algorithm to compute the maximum likelihood parameters for the given
 // data. Uses the value in Par as starting point.
 // eps is an error threshold for stopping the iteration.
-// returns the value of the likelihood 
+// returns the value of the likelihood
 double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent) {
   double LikelNew, LikelOld;
   long iter;
@@ -290,7 +292,7 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
   // Initial value for likelihood.
   LikelNew = log_likelihood_fast(T, Par, data, sl);
   LikelNew = 0;
-  LikelOld = LikelNew + 100.0; 
+  LikelOld = LikelNew + 100.0;
   iter = 0;
 
   // The main loop.
@@ -304,7 +306,7 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
       for(j=0; j < F.ncols; j++) {
         p = joint_prob_fast(T, Par, sl, i, j);
         pleaf = pleaf + p;
-        F.m[i][j] = data.c[i] * p; 
+        F.m[i][j] = data.c[i] * p;
       }
 
       // now divide by the probability on the leaf.
@@ -339,7 +341,7 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
       std::cout << "  err: " << fabs(LikelNew - LikelOld) << "             \r";
 
       // forces to print. Otherwise keeps output into a buffer for some time.
-      std::cout.flush();   
+      std::cout.flush();
     }
   }
   if (!silent) {

@@ -3,6 +3,9 @@
 
 #include "Empar.h"
 
+#include <stdexcept>
+
+
 void help(void) {
   std::cout << "Usage: Empar <tree file> <fasta file> <model>" << std::endl;
   std::cout << std::endl;
@@ -18,13 +21,13 @@ int main(int argc, char* argv[]){
 
   // Check for command line arguments
   if (argc == 1) {
-    std::cout << "No input arguments. Tree and MSA in fasta format requiered." << std::endl;
     help();
-    exit(1);
+    throw std::invalid_argument("No input arguments. Tree and MSA in fasta format requiered.");
+
   } else if (argc >= 5) {
-    std::cout << "Too many arguments." << std::endl;
     help();
-    exit(1);
+    throw std::invalid_argument("No input arguments. Tree and MSA in fasta format requiered.");
+
   }
 
   run(argv[1], argv[2], argv[3]);

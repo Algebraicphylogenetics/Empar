@@ -1,12 +1,12 @@
 /*
  *  parameters.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
-// This file contains a veriaty of functions that are not used in the final tests. I tried the exact test, approaximations, KL divergence, 
+// This file contains a veriaty of functions that are not used in the final tests. I tried the exact test, approaximations, KL divergence,
 // different bounds on the number of parameters etc. The code is left inside for to be possibly of use or played with.
 
 #include <iostream>
@@ -17,6 +17,8 @@
 #include "parameters.h"
 #include "em.h"
 #include "matrix.h"
+
+#include <stdexcept>
 
 // Assigns memory for storing the parameters matching the given tree.
 void create_parameters(Parameters &Par, Tree &T) {
@@ -104,7 +106,7 @@ int GetMinor(TMatrix &src, TMatrix &dest, int row, int col, int order)
 void matrix_inverse(TMatrix &A, int order, TMatrix &Y){
     // get the determinant of a
     double det = 1.0/determinant(A,order);
-   
+
     TMatrix minor;
     minor.resize(order-1);
     for(int i=0; i < order-1; i++)
@@ -131,7 +133,7 @@ void matrix_product(TMatrix &A, TMatrix &B, TMatrix &prod) {
   prod.resize(rows);
   for (int i=0; i < rows; i++) {
     prod[i].resize(cols);
-  }  
+  }
 
   for(int i=0; i < rows; i++) {
     for(int j=0; j < cols; j++) {
@@ -147,12 +149,12 @@ void matrix_product(TMatrix &A, TMatrix &B, TMatrix &prod) {
 void matrix_substract(TMatrix &A, TMatrix &B, TMatrix &diff) {
 	int rows = A.size();
 	int cols = B[0].size();
-	
+
 	diff.resize(rows);
 	for (int i=0; i < rows; i++) {
 		diff[i].resize(cols, 0);
-	}  
-	
+	}
+
 	for(int i=0; i < rows; i++) {
 		for(int j=0; j < cols; j++) {
 		    diff[i][j] = A[i][j] - B[i][j];
@@ -185,7 +187,7 @@ double induced_L2_norm(TMatrix &A) {
 	double newnorm;
 	int rows= A.size();
 	int cols= A[0].size();
-	
+
 	for (int i=0; i < cols; i++) {
 		newnorm=0;
 		for(int j=0; j < rows; j++) {
@@ -210,7 +212,7 @@ double branch_length_error_bound(TMatrix &tm_oryg, TMatrix &tm_est) {
 	matrix_inverse(tm_oryg, K, m_inv);
 	matrix_substract(tm_oryg, tm_est, m_diff);
 
-	
+
     double cota = 1./4 * K * induced_L1_norm(m_inv) * induced_L1_norm(m_diff);
 	std::cout.precision(15);
 	return cota;
@@ -220,17 +222,17 @@ double branch_length_error_bound(TMatrix &tm_oryg, TMatrix &tm_est) {
 // Computes an upper bound for the branch length error: version 2 for the mult. probabilities
 double branch_length_error_bound_mult(TMatrix &tm_oryg, TMatrix &tm_est) {
 	int K = tm_oryg.size(); // vector=1st row for ex. - its size/length
-	 
-    double vec_diffL2 = 0.0; 
+
+    double vec_diffL2 = 0.0;
 	double temp = 0.0;
 	TMatrix mp_inv;// inverse of the original transition matrix
 	mp_inv.resize(K);
 	for(int i=0; i < K; i++) {
 		mp_inv[i].resize(K, 0);
-		temp = tm_oryg[0][i] - tm_est[0][i]; 
+		temp = tm_oryg[0][i] - tm_est[0][i];
 		vec_diffL2 = vec_diffL2 + pow(temp, 2);
 	}
-	
+
 	matrix_inverse(tm_oryg, K, mp_inv); // inverse of the original matrix
 
     double cota = induced_L2_norm(mp_inv) * sqrt(vec_diffL2);
@@ -246,9 +248,9 @@ double bound_mult(TMatrix &tm_oryg, double pr_mult, long N) {
 	for(int i=0; i < K; i++) {
 		mp_inv[i].resize(K, 0);
 		}
-	
+
 	matrix_inverse(tm_oryg, K, mp_inv); // inverse of the original matrix
-	
+
 	  double cota = induced_L2_norm(mp_inv) * sqrt(-1* pr_mult/((double) N));
 	std::cout.precision(15);
 	return cota;
@@ -257,8 +259,8 @@ double bound_mult(TMatrix &tm_oryg, double pr_mult, long N) {
 
 double log_multinomial_evaluate(std::vector<double> &p, std::vector<double> &data, long N) {
 	unsigned long i;
-	
-	double ret = (double)N*log((double)N); 
+
+	double ret = (double)N*log((double)N);
 	for (i=0; i < p.size(); i++) {
 		  if (data[i] > 0) {
 			  ret = ret + data[i] * log(p[i]/data[i]);
@@ -270,7 +272,7 @@ double log_multinomial_evaluate(std::vector<double> &p, std::vector<double> &dat
 
 double get_mult(std::vector<double> &tm_oryg, std::vector<double> &counts_est, long N){ // here they are vectors!!
     double x_mult = 0;
-	
+
     x_mult = exp(log_multinomial_evaluate(tm_oryg, counts_est, N)); // vectors! first row
 	return x_mult;
 }
@@ -295,7 +297,7 @@ void branch_lengths(Parameters &Par, std::vector<double> &br) {
 double parameters_distance_edge(Parameters &Par1, Parameters &Par2, long e) {
   double c, d;
   long j, k;
-  
+
   d = 0;
   for(j=0; j < Par1.nalpha; j++) {
     for(k=0; k < Par1.nalpha; k++) {
@@ -324,10 +326,9 @@ double parameters_distance(Parameters &Par1, Parameters &Par2) {
   long i,j,k;
   double d, e;
   if (Par1.nedges != Par2.nedges || Par1.nalpha != Par2.nalpha) {
-    std::cout << "Error: Can't compare the two parameters." << std::endl;
-    exit(1);
+    throw std::range_error( "Error: Can't compare the two parameters." );
   }
- 
+
   d = 0;
   for (i=0; i < Par1.nedges; i++) {
     for(j=0; j < Par1.nalpha; j++) {
@@ -391,8 +392,7 @@ void read_parameters(Parameters &Par, std::string const &fname) {
   fpar.open(fname.c_str(), std::ios::in);
   fpar >> nalpha >> nedges;
   if(Par.nalpha != nalpha || Par.nedges != nedges) {
-    std::cout << "The number of edges or nalpha in the file are not what was expected" << std::endl;
-    exit(-1);
+    throw std::range_error(  "The number of edges or nalpha in the file are not what was expected");
   }
 
   for(i=0; i < nalpha; i++) {
@@ -413,7 +413,7 @@ void read_parameters(Parameters &Par, std::string const &fname) {
 void copy_parameters(Parameters &source, Parameters &target) {
   target.nedges = source.nedges;
   target.nalpha = source.nalpha;
- 
+
   target.tm.resize(source.nedges);
   for (long i=0; i < source.nedges; i++) {
     target.tm[i].resize(source.nalpha);
