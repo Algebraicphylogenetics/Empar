@@ -1,9 +1,9 @@
 /*
  *  tree.h
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #ifndef __TREE_H__
@@ -24,7 +24,7 @@ struct Edge {
 
 // Struct that stores a tree as a list of edges.
 // The auxiliar states shidden and sleaves are used internally on the EM algorithm.
-struct Tree { 
+struct Tree {
   long nalpha;                       // number of states per node
   long nleaves;                      // number of leaves
   long nnodes;                       // number of nodes
@@ -35,14 +35,14 @@ struct Tree {
   std::vector<Edge> edges;           // vector with the edges.
   std::vector<std::string> names;    // node names
   std::string tree_name;             // filename from where the tree was read.
-  
+
   // Auxiliar data for using inside the em algorithm.
   State shidden;                     // stores a state on the hidden nodes
   State sleaves;                     // Stores a state on the leaves
 };
 
 
-void read_tree(Tree &T, std::string fname, long nalpha=4);
+Tree read_tree(std::string fname, long nalpha=4);
 void print_tree(Tree &T);
 void print_newick_tree(Tree &T, std::vector<double> br);
 

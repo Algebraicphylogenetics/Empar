@@ -68,7 +68,6 @@ bool nonident_warning(Tree &T) {
 
 void run(std::string tree_filename, std::string fasta_filename, std::string model_name) {
   Model Mod;                 // The model
-  Tree T;                    // the tree
   Counts data;               // the counts
   Parameters Par;            // the parameters
   std::vector<double> br;    // branch lengths
@@ -97,7 +96,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   std::cout << "Model: " << Mod.name << std::endl;
 
   // Reads the tree.
-  read_tree(T, tree_filename);
+  Tree T = read_tree(tree_filename);
 
   // Prints the Tree
   std::cout << "Tree:" << std::endl;

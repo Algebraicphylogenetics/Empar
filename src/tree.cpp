@@ -65,7 +65,7 @@ void list_edges(std::vector<newick_node*> &nodes, std::list<Edge> &edges) {
 
 
 // Reads a Newick tree from a file and parses it, returning a Tree struct.
-void read_tree(Tree &T, std::string fname, long nalpha) {
+Tree read_tree(std::string fname, long nalpha) {
   long i;
    newick_node *root;
   //  FILE *f;
@@ -115,6 +115,8 @@ void read_tree(Tree &T, std::string fname, long nalpha) {
   // Source and target are the indices of the node in the vector nodes.
   list_edges(nodes, edges);
 
+  Tree T;
+
   // Filling the Tree struct.
   T.edges.resize(0);
   T.edges.insert(T.edges.begin(), edges.begin(), edges.end());
@@ -151,6 +153,8 @@ void read_tree(Tree &T, std::string fname, long nalpha) {
 
   // Freeing memory for the Newick code.
   seqFreeAll();
+
+  return T;
 }
 
 
