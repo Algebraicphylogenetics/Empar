@@ -19,9 +19,10 @@
 #include "matrix.h"
 
 #include <stdexcept>
+Parameters Par;
 
 // Assigns memory for storing the parameters matching the given tree.
-void create_parameters(Parameters &Par, Tree &T) {
+Parameters create_parameters(Tree &T) {
   int i,j;
 
   Par.nalpha = T.nalpha;
@@ -35,6 +36,7 @@ void create_parameters(Parameters &Par, Tree &T) {
       (Par.tm[i][j]).resize(T.nalpha);
     }
   }
+  return Par;
 }
 
 

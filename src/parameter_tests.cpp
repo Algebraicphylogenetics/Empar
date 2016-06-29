@@ -304,8 +304,8 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
   pvals.resize(T.nedges);
 
   // Initialize the parameters for simulation of K81 data for testing
-  create_parameters(Par, T);
-  create_parameters(Parsim, T);
+  Par = create_parameters(T);
+  Parsim = create_parameters(T);
 
   // Initializing data structures
   KLe.resize(T.nedges);
@@ -602,7 +602,7 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
   double eps_pseudo = 0.001;     // Amount added to compute the pseudo-counts.
 
   // Initialize the parameters for simulation of K81 data for testing
-  create_parameters(Par, T);
+  Par = create_parameters(T);
 
   // Obtaining the distribution of estimated parameters with EM
 

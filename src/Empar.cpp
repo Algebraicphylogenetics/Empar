@@ -106,7 +106,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   nonident = nonident_warning(T);
 
   // Initialize the parameters for simulation of K81 data for testing
-  create_parameters(Parsim, T);
+  Parsim = create_parameters(T);
 
   if (fasta_filename == ":test") {      // if fasta file is :test generate random data.
     simulate = true;
@@ -142,7 +142,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   }
 
   // Assigns memory for the parameters.
-  create_parameters(Par, T);
+  Par = create_parameters(T);
 
   // Chose initial parameters at random
   //  random_parameters(Mod, Par);

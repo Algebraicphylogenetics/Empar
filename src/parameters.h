@@ -1,9 +1,9 @@
 /*
  *  parameters.h
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 
@@ -20,7 +20,7 @@ typedef std::vector<std::vector<double> > TMatrix;
 typedef std::vector<double> Root;
 
 
-// This struct stores the parameters for a given tree topology. 
+// This struct stores the parameters for a given tree topology.
 //It automatically gets destroyed when not needed
 struct Parameters {
   long nedges;              // Number of edges.
@@ -30,9 +30,7 @@ struct Parameters {
 };
 
 
-
-
-void create_parameters(Parameters &Par, Tree &T);
+Parameters create_parameters(Tree &T);
 
 double branch_length(TMatrix &tm, long nalpha);
 void branch_lengths(Parameters &Par, std::vector<double> &br);
