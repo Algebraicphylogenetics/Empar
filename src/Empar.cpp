@@ -78,9 +78,9 @@ void save_sigmas_to(const std::string& fname,
       // TODO: exit
     }
 
-    for(unsigned int i=0; i < cov_matrix.size(); i++) {
-      for(unsigned int j=0; j < cov_matrix.size(); j++) {
-        fcov << cov_matrix[i][j] << " ";
+    for (auto row : cov_matrix) {
+      for (auto cell : row) {
+        fcov << cell << " ";
       }
       fcov << std::endl;
     }
