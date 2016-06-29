@@ -21,6 +21,24 @@
 #include <stdexcept>
 Parameters Par;
 
+
+// Sets a fixed initial parameters of JC type.
+void initial_parameters(Parameters &Par) {
+  long i,j,k;
+  for (k=0; k < Par.nedges; k++) {
+    for(i=0; i < Par.nalpha; i++) {
+      for(j=0; j < Par.nalpha; j++) {
+        if (i==j) Par.tm[k][i][j] = 0.7;
+        else Par.tm[k][i][j] = 0.3 / (double)(Par.nalpha-1);
+      }
+    }
+  }
+  for (i=0; i < Par.nalpha; i++) {
+    Par.r[i] = 1/(double)Par.nalpha;
+  }
+}
+
+
 // Assigns memory for storing the parameters matching the given tree.
 Parameters create_parameters(Tree &T) {
   int i,j;
@@ -36,9 +54,11 @@ Parameters create_parameters(Tree &T) {
       (Par.tm[i][j]).resize(T.nalpha);
     }
   }
+
+  initial_parameters(Par);
+
   return Par;
 }
-
 
 
 // Computes the determinant of an nxn matrix stored in a.
