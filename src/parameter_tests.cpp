@@ -399,9 +399,6 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
       save_parameters(Parsim, output_filename + ".sim.dat");
     }
 
-    // random initial conditions
-    //    random_parameters(Mod, Par);
-
     // Runs the EM
     likel = EMalgorithm(T, Mod, Par, data, eps);
 
@@ -416,10 +413,6 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
     guess_permutation(T, Mod, Par);
 
     distance = parameters_distance(Parsim, Par);
-    // tests using KL score:
-	// KL = KL_divergence_fast(T, Parsim, Par, sl);
-    // KL = KL_divergence(T, Par, Parsim);
-
 
       // estimated counts: Par ; original: Parsim
       std::vector<double> counts_est;

@@ -116,7 +116,6 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
     // Generate random parameters
     random_parameters_length(T, Mod, Parsim);
-    //    read_parameters(Parsim, "bla0.sim.dat");
 
     // Simulate the data
     random_fake_counts(T, 1000, data, Parsim);
@@ -143,9 +142,6 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
   // Assigns memory for the parameters.
   Par = create_parameters(T);
-
-  // Chose initial parameters at random
-  //  random_parameters(Mod, Par);
 
   // Check the time
   clock_t start_time, end_time;
