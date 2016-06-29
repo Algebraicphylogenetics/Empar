@@ -403,7 +403,7 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
     //    random_parameters(Mod, Par);
 
     // fixed initial conditions
-    initial_parameters(Mod, Par);
+    initial_parameters(Par);
 
     // Runs the EM
     likel = EMalgorithm(T, Mod, Par, data, eps);
@@ -617,7 +617,7 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
     add_pseudocounts(eps_pseudo, data);
 
     // fixed initial conditions
-    initial_parameters(Mod, Par);
+    initial_parameters(Par);
 
     // Runs EM
     likel = EMalgorithm(T, Mod, Par, data, eps);

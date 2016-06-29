@@ -380,7 +380,7 @@ void MLE_all_obs(Tree &T, Model &Mod, Parameters &Par, Matrix &F, StateList &sl)
 
 
 // Sets a fixed initial parameters of JC type.
-void initial_parameters(Model &Mod, Parameters &Par) {
+void initial_parameters(Parameters &Par) {
   long i,j,k;
   for (k=0; k < Par.nedges; k++) {
     for(i=0; i < Par.nalpha; i++) {
