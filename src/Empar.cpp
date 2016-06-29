@@ -148,7 +148,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   //  random_parameters(Mod, Par);
 
   // fixed initial conditions
-  initial_parameters(Mod, Par);
+  initial_parameters(Par);
 
 
   // Check the time
