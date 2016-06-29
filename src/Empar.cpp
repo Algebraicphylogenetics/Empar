@@ -119,7 +119,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
     //    read_parameters(Parsim, "bla0.sim.dat");
 
     // Simulate the data
-    random_fake_counts(T, 1000, data, Parsim);
+    data = random_fake_counts(T, 1000, Parsim);
 
     // Prints branch-lengths for future check.
     branch_lengths(Parsim, brsim);

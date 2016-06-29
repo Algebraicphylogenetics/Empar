@@ -19,6 +19,9 @@
 
 #include "boost/math/distributions/chi_squared.hpp"
 
+Counts data;
+
+
 // Produces random parameters without length restriction.
 void random_parameters(Model &Mod, Parameters &Par){
   long k;
@@ -55,9 +58,8 @@ void random_parameters_length(Tree &T, Model &Mod, Parameters &Par){
 }
 
 
-
 // Simulates the data used for testing. Stores the data in data and the parameters in Parsim.
-void random_fake_counts(Tree &T, double N, Counts &data, Parameters &Parsim) {
+Counts random_fake_counts(Tree &T, double N, Parameters &Parsim) {
 
   long i;
 
@@ -79,6 +81,8 @@ void random_fake_counts(Tree &T, double N, Counts &data, Parameters &Parsim) {
   data.nalpha = 4;
   data.nspecies = T.nleaves;
   data.nstates = T.nstleaves;
+
+  return data;
 }
 
 
