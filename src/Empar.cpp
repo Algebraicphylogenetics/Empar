@@ -66,6 +66,29 @@ bool nonident_warning(Tree &T) {
   return Lnon.size() > 0;
 }
 
+
+void save_sigmas_to(const std::string& fname,
+	const std::vector<std::vector<double> >& cov_matrix)
+{
+    std::fstream fcov;
+    fcov.precision(15);
+    fcov.open(fname.c_str(), std::ios::out);
+    if (!fcov.is_open()) {
+      std::cout << "Could not open file: covariances.dat" << std::endl;
+      // TODO: exit
+    }
+
+    for(unsigned int i=0; i < cov_matrix.size(); i++) {
+      for(unsigned int j=0; j < cov_matrix.size(); j++) {
+        fcov << cov_matrix[i][j] << " ";
+      }
+      fcov << std::endl;
+    }
+    fcov << std::endl;
+
+    fcov.close();
+}
+
 void run(std::string tree_filename, std::string fasta_filename, std::string model_name) {
   Model Mod;                 // The model
   Counts data;               // the counts
@@ -168,20 +191,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
     }
 
     // Save the sigmas into a file
-    std::fstream fcov;
-    fcov.precision(15);
-    fcov.open(covariances_filename.c_str(), std::ios::out);
-    if (!fcov.is_open()) {
-      std::cout << "Could not open file: covariances.dat" << std::endl;
-    }
-    for(unsigned int i=0; i < Cov.size(); i++) {
-      for(unsigned int j=0; j < Cov.size(); j++) {
-        fcov << Cov[i][j] << " ";
-      }
-      fcov << std::endl;
-    }
-    fcov << std::endl;
-    fcov.close();
+    save_sigmas_to(covariances_filename, Cov);
   }
 
   std::cout << std::endl;
