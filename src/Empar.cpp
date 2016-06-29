@@ -147,10 +147,6 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   // Chose initial parameters at random
   //  random_parameters(Mod, Par);
 
-  // fixed initial conditions
-  initial_parameters(Par);
-
-
   // Check the time
   clock_t start_time, end_time;
   start_time = clock();

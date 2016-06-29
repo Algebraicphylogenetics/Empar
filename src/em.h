@@ -37,6 +37,4 @@ void one_node_marginalization(Tree &T, Matrix &F, long a, StateList &sl, Root &s
 double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent=false);
 void MLE_all_obs(Tree &T, Model &Mod, Parameters &Par, Matrix &F, StateList &sl);
 
-void initial_parameters(Parameters &Par);
-
 #endif
