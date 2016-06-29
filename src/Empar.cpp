@@ -140,10 +140,8 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
     throw std::invalid_argument("The order of the sequences or their number and the phylogenetic tree do not match.");
   }
 
-  // Assigns memory for the parameters.
   Par = create_parameters(T);
 
-  // Check the time
   clock_t start_time, end_time;
   start_time = clock();
   std::cout << "Starting the EM algorithm" << std::endl;
@@ -155,10 +153,8 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   // Choses the best permutation.
   guess_permutation(T, Mod, Par);
 
-  // Check the end time
   end_time = clock();
 
-  // Compute branch lengths
   branch_lengths(Par, br);
 
   // If parameters are not identifiable, the computation of the covariance matrix will
