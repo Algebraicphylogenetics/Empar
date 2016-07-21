@@ -1,11 +1,10 @@
 /*
  *  tree.cpp
  *
- *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ * Created by Ania M. Kedzierska on 11/11/11.
+ * Politecnic University of Catalonia, Center for Genomic Regulation.
  *
  */
-
 
 #include <iostream>
 #include <fstream>
@@ -16,8 +15,6 @@
 #include "Newickform.h"
 #include "seqUtil.h"
 #include "tree.h"
-
-
 
 
 // Stores a pointer to every node in an array. First the leaves, then the rest.
@@ -70,7 +67,6 @@ Tree read_tree(std::string fname, long nalpha) {
    newick_node *root;
   //  FILE *f;
 
-  // Memory initialization for the Newick code.
   seqMemInit();
 
   std::ifstream ftree;
@@ -151,7 +147,6 @@ Tree read_tree(std::string fname, long nalpha) {
   create_state(T.shidden, T.nhidden, T.nalpha);
   create_state(T.sleaves, T.nleaves, T.nalpha);
 
-  // Freeing memory for the Newick code.
   seqFreeAll();
 
   return T;
@@ -202,7 +197,7 @@ void list_outgoing_edges(Tree &T, long node, std::list<long> &L) {
 }
 
 
-// recursively prints the newick tree from the root.
+// recursively prints the newick tree starting from the root.
 void print_newick_tree_rec(Tree &T, std::vector<double> br, long root) {
   long e;
   bool first;

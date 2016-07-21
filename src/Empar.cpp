@@ -119,6 +119,8 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   std::cout << "Model: " << Mod.name << std::endl;
 
   // Reads the tree.
+  std::cout << "Model: " << Mod.name << std::endl;
+
   Tree T = read_tree(tree_filename);
 
   // Prints the Tree

@@ -25,8 +25,6 @@ CFLAGS=-I $(INC) $(FLAGS) --std=c++11
 
 all: $(TARGETS)
 
-#debug:
-#	echo $(DEPS)
 
 # Rule for object files
 build/%.o: src/%.cpp $(DEPS)
