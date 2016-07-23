@@ -407,7 +407,7 @@ void Fisher_information_model(Tree &T, Model &Mod, Parameters &Par, long N, Coun
 
   }
 
-  create_state_list(sl, T);
+  sl = create_state_list(T);
 
   // Fills stuff
   fill_pleaf(T, Mod, sl, Par, pleaf);

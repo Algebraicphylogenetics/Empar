@@ -1,9 +1,9 @@
 /*
  *  parameters.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 
@@ -14,10 +14,10 @@
 // Assigns memory and fills the struct StateList from the information in T.
 // After this, sl.l containes the states on leaves and sl.h the states on hidden
 // nodes. Both states are obtained from the index via the index2state function in state.h.
-void create_state_list(StateList &sl, Tree &T) {
+StateList create_state_list(Tree &T) {
   long i, j;
   State sta;
-
+  StateList sl;
   sl.nalpha = T.nalpha;
 
 
@@ -56,4 +56,5 @@ void create_state_list(StateList &sl, Tree &T) {
       sl.l[i][j] = sta.s[j];
     }
   }
+  return sl;
 }

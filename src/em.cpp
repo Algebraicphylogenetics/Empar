@@ -277,7 +277,8 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
 
   // creates a state list for the tree T, and fills it in. This will speed up
   // the most critical loops below.
-  create_state_list(sl, T);
+  //create_state_list(sl, T);
+  sl = create_state_list(T);
 
   // initializes the big matrix F
   F = create_matrix(T.nstleaves, T.nsthidden);
