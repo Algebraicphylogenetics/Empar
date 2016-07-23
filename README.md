@@ -1,30 +1,29 @@
 #Overview
-**Empar** is an implementation of an MLE method based on the EM algorithm for effective parameter estimation of the (discrete-time) Markov evolutionary models.
+**Empar** is an implementation of the EM algorithm for effective parameter estimation of the (discrete-time) Markov evolutionary models.
 
 ### Dependencies
 Current version uses Boost 1_61_0 (see the license).
 http://www.boost.org/doc/libs/1_61_0/more/getting_started/unix-variants.html#get-boost
-### Compilation and command line use
+### Compilation
 ```
 make
 ```
 
 ```
-empar <tree file> <fasta file> <model>,
+./main <tree file> <fasta file> <model>,
 ```
 where
 *  *tree file* —-  [Newick] tree (not necessarily bifurcated)
-*  *fasta file* —- [fasta] input alignment
+*  *fasta file* —- input alignment in a fasta format
 *  *model*     —- model choice: jc, k80, k81, ssm,
 
 e.g.
 ```
-./Empar test.tree data.fa ssm,
+./main data/test.tree data/data.fa ssm,
 ```
 
-
-
-The nodes in the tree are labeled in the following order: first come the leaves in the order in which they appear in the [Newick] input tree format, followed by the internal nodes starting from the root and going top down from left to right.
+### Notes on the labelling
+The nodes in the tree are labeled starting with the leaves as listed in the [Newick] input tree, followed by the internal nodes starting from the root and going top down from left to right.
 For example, given a tree:
 ```
 ((human:0.01,ape:0.2,hamster:0.3):0.5,bird:0.4,amoeba:0.8)
@@ -33,7 +32,7 @@ the leaves take the labels 0-4: human, ape, hamster, burred, amoeba. There are t
 
 This is also the order in which the estimated matrices are listed in the output file.
 
-### Note on identifiability
+### Identifiability
 WARNING is generated when a node of valency 2 is present. This is due to the fact that the parameters associated with the outgoing edges are non-identifiable. Neither are the branches stemming from such edges. In fact, one can identify only the product of such matrices and the sum of the branches.
 
 ### Output:
@@ -92,7 +91,7 @@ bird:0.383754440749502,amoeba:0.781680154271902)
 
 If <fasta file> is replaced by :test, it uses transition parameters simulated internally for which it calculates theoretical values of the joint distribution, *p*. The counts are taken to be *pN*, where *N* is the length of the alignment. This option was created for the purpose of testing.
 ```
-./empar test2.tree :test k81
+./main test2.tree :test k81
 ```
 
 ### Identifiability
