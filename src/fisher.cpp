@@ -113,11 +113,11 @@ void edgestate(Tree &T, long e, std::vector<int> &sth, std::vector<int> &stl, lo
 
 
 // Returns the root state
-long rootstate(Tree &T, State &sth) {
+long rootstate(State &sth) {
   return sth.s[0];
 }
 
-long rootstate(Tree &T, std::vector<int> &sth) {
+long rootstate(std::vector<int> &sth) {
   return sth[0];
 }
 
@@ -134,7 +134,7 @@ long rootstate(Tree &T, std::vector<int> &sth) {
 // The following functions fill three arrays of probabilities.
 
 // pleaf is a vector of joint probabilities on the leaves
-void fill_pleaf(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array1 &pleaf) {
+void fill_pleaf(Tree &T, StateList &sl, Parameters &Par, Array1 &pleaf) {
   long i, j, l, u, v;
   double p;
 
@@ -149,7 +149,7 @@ void fill_pleaf(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array1 &ple
     for(j=0; j < T.nsthidden; j++) {
 
       // Compute leaf probabilities
-      p = Par.r[rootstate(T, sl.h[j])];
+      p = Par.r[rootstate(sl.h[j])];
       for(l=0; l < T.nedges; l++) {
         edgestate(T, l, sl.h[j], sl.l[i], u, v);
         p = p*Par.tm[l][u][v];
@@ -190,7 +190,7 @@ void fill_pcond1(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array2 &pc
       for(e=0; e < T.nedges; e++) {
 
         // Compute cond1 probabilities
-        p = Par.r[rootstate(T, sl.h[j])];
+        p = Par.r[rootstate(sl.h[j])];
         for(l=0; l < T.nedges; l++) {
           if (l == e) continue;
           edgestate(T, l, sl.h[j], sl.l[i], u, v);
@@ -198,7 +198,7 @@ void fill_pcond1(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array2 &pc
         }
 
         edgestate(T, e, sl.h[j], sl.l[i], a, b);
-        k = erc2param(T, Mod, e, a, b);
+        k = erc2param(Mod, e, a, b);
         pcond1[i][k] = pcond1[i][k] + p;
       }
 
@@ -209,7 +209,7 @@ void fill_pcond1(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array2 &pc
         p = p*Par.tm[l][u][v];
       }
 
-      k = root2param(T, Mod, rootstate(T, sl.h[j]));
+      k = root2param(T, Mod, rootstate(sl.h[j]));
       pcond1[i][k] = pcond1[i][k] + p;
     }
   }
@@ -252,7 +252,7 @@ void fill_pcond2(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array3 &pc
           if (e==ep) continue;
 
           // Compute cond2 probabilities
-          p = Par.r[rootstate(T, sl.h[j])];
+          p = Par.r[rootstate(sl.h[j])];
           for(l=0; l < T.nedges; l++) {
             if (l == e || l == ep) continue;
             edgestate(T, l, sl.h[j], sl.l[i], u, v);
@@ -260,10 +260,10 @@ void fill_pcond2(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array3 &pc
           }
 
           edgestate(T, e, sl.h[j], sl.l[i], a, b);
-          k = erc2param(T, Mod, e, a, b);
+          k = erc2param(Mod, e, a, b);
 
           edgestate(T, ep, sl.h[j], sl.l[i], ap, bp);
-          kp = erc2param(T, Mod, ep, ap, bp);
+          kp = erc2param(Mod, ep, ap, bp);
 
           pcond2[i][k][kp] = pcond2[i][k][kp] + p;
         }
@@ -280,9 +280,9 @@ void fill_pcond2(Tree &T, Model &Mod, StateList &sl, Parameters &Par, Array3 &pc
         }
 
         edgestate(T, e, sl.h[j], sl.l[i], a, b);
-        k = erc2param(T, Mod, e, a, b);
+        k = erc2param(Mod, e, a, b);
 
-        kp = root2param(T, Mod, rootstate(T, sl.h[j]));
+        kp = root2param(T, Mod, rootstate(sl.h[j]));
 
         pcond2[i][k][kp] = pcond2[i][k][kp] + p;
         pcond2[i][kp][k] = pcond2[i][kp][k] + p;
@@ -305,7 +305,7 @@ void get_param_vector(Tree &T, Model &Mod, Parameters &Par, std::vector<double> 
   for(e=0; e < T.nedges; e++) {
     for(a=0; a < T.nalpha; a++) {
       for(b=0; b < T.nalpha; b++) {
-        k = erc2param(T, Mod, e, a, b);
+        k = erc2param(Mod, e, a, b);
         param[k] = Par.tm[e][a][b];
       }
     }
@@ -410,7 +410,7 @@ void Fisher_information_model(Tree &T, Model &Mod, Parameters &Par, long N, Coun
   sl = create_state_list(T);
 
   // Fills stuff
-  fill_pleaf(T, Mod, sl, Par, pleaf);
+  fill_pleaf(T, sl, Par, pleaf);
   fill_pcond1(T, Mod, sl, Par, pcond1);
   fill_pcond2(T, Mod, sl, Par, pcond2);
 
@@ -477,7 +477,7 @@ void Fisher_information_free(Tree &T, Model &Mod, Array2 &Imod, Array2 &Ifree) {
   for(e=0; e < T.nedges; e++) {
     for(i=0; i < T.nalpha; i++) {
       for(j=0; j < T.nalpha; j++) {
-        p = erc2param(T, Mod, e, i, j);
+        p = erc2param(Mod, e, i, j);
         coeff[p] = coeff[p] + 1;  // adds one to the corresponding parameter index.
       }
     }
@@ -500,8 +500,8 @@ void Fisher_information_free(Tree &T, Model &Mod, Array2 &Imod, Array2 &Ifree) {
       for(j=0; j < T.nalpha; j++) {
         l = erc2freeparam(T, Mod, e, i, j);
         if (l < 0) continue;   // negative l means the parameter is killed.
-        modpar[l] = erc2param(T, Mod, e, i, j);
-        modparkill[l] = erc2param(T, Mod, e, i, i);
+        modpar[l] = erc2param(Mod, e, i, j);
+        modparkill[l] = erc2param(Mod, e, i, i);
       }
     }
   }
