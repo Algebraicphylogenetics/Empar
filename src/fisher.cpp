@@ -38,7 +38,7 @@ namespace ublas = boost::numeric::ublas;
 // Root parameters are present only for SSM and GMM.
 
 // Converts an edge-row-column to a linear index identifying the parameter for the given model.
-long erc2param(Tree &T, Model &Mod, long e, long r, long c) {
+long erc2param(Model &Mod, long e, long r, long c) {
   long p = Mod.matrix_structure(r, c);
   return e*Mod.np + p;
 }
