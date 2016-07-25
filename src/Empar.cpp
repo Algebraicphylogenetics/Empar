@@ -119,8 +119,6 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   std::cout << "Model: " << Mod.name << std::endl;
 
   // Reads the tree.
-  std::cout << "Model: " << Mod.name << std::endl;
-
   Tree T = read_tree(tree_filename);
 
   // Prints the Tree
@@ -198,12 +196,12 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
   std::cout << std::endl;
   std::cout << "Finished." << std::endl;
-  std::cout << "Elapsed time: " << ((double)(end_time - start_time)) / CLOCKS_PER_SEC << " s" << std::endl;
+  std::cout << "Time: " << ((double)(end_time - start_time)) / CLOCKS_PER_SEC<< std::endl;
   std::cout << std::endl;
-  std::cout << "Likelihood: " << log_likelihood(T, Par, data) << std::endl << std::endl;
-  std::cout << "Branch lengths: " << std::endl;
-  print_vector(br);
-
+  std::cout << "Likelihood: " << -log_likelihood(T, Par, data) << std::endl << std::endl;
+  //std::cout << "Branch lengths: " << std::endl;
+  //print_vector(br);
+  nonident = 1;
   if (!nonident) {
     std::cout << "Parameter variances: " << std::endl;
     print_vector(variances);

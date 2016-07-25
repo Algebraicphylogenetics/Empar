@@ -338,8 +338,9 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
     iter++;
 
     if (!silent) {
-      std::cout << "  " << iter << ":  L: " << LikelNew;
-      std::cout << "  err: " << fabs(LikelNew - LikelOld) << "             \r";
+      std::cout << "Iter: " << iter << "             \r";
+      //std::cout << "  L: " << LikelNew;
+      //std::cout << "  err: " << fabs(LikelNew - LikelOld) << "             \r";
 
       // forces to print. Otherwise keeps output into a buffer for some time.
       std::cout.flush();
