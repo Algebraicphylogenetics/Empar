@@ -15,7 +15,7 @@ make
 where
 *  *tree file* —-  [Newick] tree (not necessarily bifurcated)
 *  *fasta file* —- input alignment in a fasta format
-*  *model*     —- model choice: jc, k80, k81, ssm,
+*  *model*     —- phylogenetic model: jc, k80, k81, ssm,
 
 e.g.
 ```

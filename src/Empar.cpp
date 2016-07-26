@@ -94,7 +94,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   Counts data;               // the counts
   Parameters Par;            // the parameters
   std::vector<double> br;    // branch lengths
-  double eps = 1e-8;         // The threshold for the EM algorithm.
+  double eps = 1e-5;         // The threshold for the EM algorithm.
 
   Parameters Parsim;         // used for simulating data.
   std::vector<double> brsim; // branch lengths of simulated data.
