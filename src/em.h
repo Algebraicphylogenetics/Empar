@@ -1,9 +1,6 @@
 /*
  *  em.h
  *
- *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
- *
  */
 
 #ifndef __EM_H__
@@ -34,7 +31,7 @@ double entropy_fast(Tree &T, Parameters &Par, StateList &sl);
 void two_node_marginalization(Tree &T, Matrix &F, long a, long b, StateList &sl, TMatrix &N);
 void one_node_marginalization(Tree &T, Matrix &F, long a, StateList &sl, Root &s);
 
-double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent=false);
+float EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent=false);
 void MLE_all_obs(Tree &T, Model &Mod, Parameters &Par, Matrix &F, StateList &sl);
 
 #endif

@@ -1,9 +1,7 @@
 /*
  *  model.h
- *  
- *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *
+ *
  */
 
 
@@ -25,10 +23,6 @@
 
 enum ModelType {JC, K80, K81, SSM, GMM};
 
-// Struct that stores pointers to the model specific things.
-// This struct should be the interface for the model specific functions you use !
-// If you want to add a model xxx, create model_xxx.h and model_xxx.cpp, add #include "model_xxx.h"
-// here, and modify the function create_model to take the new model into account.
 
 struct Model {
   long nalpha;                                         // Number of bases

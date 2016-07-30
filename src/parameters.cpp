@@ -1,18 +1,17 @@
 /*
  *  parameters.cpp
  *
- *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
  *
  */
 
-// This file contains a veriaty of functions that are not used in the final tests. I tried the exact test, approaximations, KL divergence,
-// different bounds on the number of parameters etc. The code is left inside for to be possibly of use or played with.
+// This file contains a veriaty of functions that are not used in the final tests.
+//e.g. exact test, approaximations, KL divergence, different bounds on the number of param.
 
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 #include <cmath>
+#include <random>
 
 #include "parameters.h"
 #include "em.h"
@@ -38,6 +37,33 @@ void initial_parameters(Parameters &Par) {
   }
 }
 
+// Sets a fixed initial parameters of a more random type
+void initial_parameters_perturbed(Parameters &Par) {
+  long i,j,k;
+  std::random_device rd; // obtain a random number from hardware
+  std::mt19937 eng(rd()); // seed the generator
+  std::uniform_real_distribution<> distr(65, 90); // define the range
+
+  for (k=0; k < Par.nedges; k++) {
+    for(i=0; i < Par.nalpha; i++) {
+      for(j=0; j < Par.nalpha; j++) {
+        if (i==j) {
+             Par.tm[k][i][j] = distr(eng)/100;
+            }
+        else Par.tm[k][i][j] = (1-Par.tm[k][i][i]) / (double)(Par.nalpha-1);
+      }
+    }
+  }
+  //root
+
+  std::uniform_real_distribution<> distrr(20, 35);
+
+  Par.r[0] = distrr(eng)/100;
+  Par.r[1] = 0.5 - Par.r[0];
+  Par.r[2] = Par.r[1];
+  Par.r[3] = Par.r[0];
+
+}
 
 // Assigns memory for storing the parameters matching the given tree.
 Parameters create_parameters(Tree &T) {
@@ -55,7 +81,8 @@ Parameters create_parameters(Tree &T) {
     }
   }
 
-  initial_parameters(Par);
+  //initial_parameters(Par);
+  initial_parameters_perturbed(Par);
 
   return Par;
 }
@@ -312,6 +339,8 @@ void branch_lengths(Parameters &Par, std::vector<double> &br) {
   br.resize(Par.nedges);
   for (i=0; i < Par.nedges; i++) {
     br[i] = -0.25*log(determinant(Par.tm[i], Par.nalpha));
+    //br[i] = determinant(Par.tm[i], Par.nalpha);
+
   }
 }
 

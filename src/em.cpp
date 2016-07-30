@@ -1,8 +1,6 @@
 /*
  *  em.cpp
  *
- *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
  *
  */
 
@@ -261,9 +259,9 @@ void one_node_marginalization(Tree &T, Matrix &F, long a, StateList &sl, Root &s
 // data. Uses the value in Par as starting point.
 // eps is an error threshold for stopping the iteration.
 // returns the value of the likelihood
-double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent) {
-  double LikelNew, LikelOld;
-  long iter;
+float EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent) {
+  float LikelNew, LikelOld;
+  long iter, iterMax;
   long i, j, e, a, b;
   double pleaf, p;
 
@@ -280,9 +278,9 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
   //create_state_list(sl, T);
   sl = create_state_list(T);
 
-  // initializes the big matrix F
+  // initializes the big matrix F-> 0's
   F = create_matrix(T.nstleaves, T.nsthidden);
-
+  //print_matrix(F,T.nstleaves, T.nsthidden);
   // Initializes the auxiliar N and s
   s.resize(T.nalpha);
   N.resize(T.nalpha);
@@ -295,9 +293,10 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
   LikelNew = 0;
   LikelOld = LikelNew + 100.0;
   iter = 0;
+  iterMax = 15000;
 
-  // The main loop.
-  while (fabs(LikelNew - LikelOld) > eps) {
+  // The main loop with its conditions!
+  while (fabs(LikelNew - LikelOld) > eps && iter < iterMax) {
     LikelOld = LikelNew;
 
     // Performs an E-step. Uses Par to distribute data into the full matrix F.
@@ -336,18 +335,6 @@ double EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double ep
     LikelNew = log_likelihood_fast(T, Par, data, sl);
 
     iter++;
-
-    if (!silent) {
-      std::cout << "Iter: " << iter << "             \r";
-      //std::cout << "  L: " << LikelNew;
-      //std::cout << "  err: " << fabs(LikelNew - LikelOld) << "             \r";
-
-      // forces to print. Otherwise keeps output into a buffer for some time.
-      std::cout.flush();
-    }
-  }
-  if (!silent) {
-    std::cout << std::endl;
   }
 
   delete_matrix(F);

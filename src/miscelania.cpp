@@ -1,13 +1,14 @@
 /*
  *  miscalenia.cpp
- *  
+ *
  *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License. 
- *  
+ *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
+ *
  */
 
 #include <cstdlib>
 #include <iostream>
+#include <cmath>
 
 #include "miscelania.h"
 
@@ -39,6 +40,24 @@ void print_vector(std::vector<double> &v, std::ostream &s) {
   s << std::endl;
 }
 
+
+// check if nay of the branches is negative: find neg entry in a vector
+int find_negative(std::vector<double> &v) {
+  unsigned int i;
+  for(i=0; i < v.size(); i++) {
+    //std::cout << "S " << v[i] ;
+    if(std::isnan(v[i])) {
+            std::cout << "S " << v[i] ;
+            break;
+    }
+  }
+  if(i == v.size()){
+    return 0;
+  }
+  else {
+    return 1;
+  }
+}
 
 void save_vector(std::vector<double> &v, std::string const &fname) {
   std::fstream st;
