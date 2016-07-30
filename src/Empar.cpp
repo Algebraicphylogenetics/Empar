@@ -1,9 +1,6 @@
 /*
  *  Empar.cpp
  *
- *  Created by Ania M. Kedzierska on 11/11/11.
- *  Copyright 2011 Politecnic University of Catalonia, Center for Genomic Regulation.  This is program can be redistributed, modified or else as given by the terms of the GNU General Public License.
- *
  */
 
 #include <iostream>
@@ -58,7 +55,7 @@ bool nonident_warning(Tree &T) {
     }
     std::cout << "." << std::endl << std::endl;
 
-    std::cout << "This may happen for two reasons:" << std::endl;
+    std::cout << "Possible causes:" << std::endl;
     std::cout << " 1) The root has valence 1. If the model has non-uniform distribution, the length of the outgoing edge cannot be recovered reliably." << std::endl;
     std::cout << " 2) There is a node (typically thought of as the root) with exactly two incident edges. In this case only the sum of lengths of the two incident edges can be recovered reliably." << std::endl << std::endl;
   }
@@ -94,7 +91,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   Counts data;               // the counts
   Parameters Par;            // the parameters
   std::vector<double> br;    // branch lengths
-  double eps = 1e-5;         // The threshold for the EM algorithm.
+  double eps = 1e-8;         // The threshold for the EM algorithm.
 
   Parameters Parsim;         // used for simulating data.
   std::vector<double> brsim; // branch lengths of simulated data.
@@ -163,28 +160,71 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
     throw std::invalid_argument("The order of the sequences or their number and the phylogenetic tree do not match.");
   }
 
-  Par = create_parameters(T);
+  //Par = create_parameters(T);
+  //print_parameters(Par);
+  //print_vector(Par.r);
 
-  clock_t start_time, end_time;
-  start_time = clock();
-  std::cout << "Starting the EM algorithm" << std::endl;
+  //clock_t
+  long start_time, end_time;
 
   // Runs the EM algorithm. Par is used as initial parameters.
   // After execution, Par contains the MLE computed by the algorithm.
-  EMalgorithm(T, Mod, Par, data, eps);
 
-  // Choses the best permutation.
-  guess_permutation(T, Mod, Par);
+ // for local max over multiple iterations
+  Parameters Parmax = Par;
+  Model Modmax = Mod;
 
-  end_time = clock();
+  float likelL = 0.0;
+  float likelMax = -1000000.0;
+  float timerec;
+  float timemax;
 
-  branch_lengths(Par, br);
+  std::cout << "Starting the EM algorithm: " ;
+
+  for (int it_runs = 0; it_runs < 1; it_runs++) {
+      Par = create_parameters(T);
+      Mod = create_model(model_name);
+      std::cout << it_runs << ", " ;
+
+      start_time = clock();
+
+      likelL= EMalgorithm(T, Mod, Par, data, eps);
+
+
+      end_time = clock();
+      //print_parameters(Par);
+
+      // Choses the best permutation.
+      guess_permutation(T, Mod, Par);
+
+      branch_lengths(Par, br);
+
+      print_vector(br);
+      int s = find_negative(br);
+      std::cout << "s: "  << s;
+
+      timerec = ((float)end_time - start_time) / CLOCKS_PER_SEC;
+
+      //assign the 1st iter time value, inc ase it's the best
+      if (it_runs == 0){
+        timemax = timerec;
+      }
+
+      if (likelL > likelMax){
+        Parmax = Par;
+        Modmax = Mod;
+        timemax = timerec;
+        likelMax = likelL;
+      }
+
+  }
+
 
   // If parameters are not identifiable, the computation of the covariance matrix will
   // fail as the Fisher info matrix will not be invertible.
   if (!nonident) {
     // Compute the covariance matrix using observed Fisher.
-    full_MLE_observed_covariance_matrix(T, Mod, Par, data, Cov);
+    full_MLE_observed_covariance_matrix(T, Modmax, Parmax, data, Cov);
     variances.resize(Cov.size());
     for(unsigned int i=0; i < Cov.size(); i++) {
       variances[i] = Cov[i][i];
@@ -196,9 +236,9 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
   std::cout << std::endl;
   std::cout << "Finished." << std::endl;
-  std::cout << "Time: " << ((double)(end_time - start_time)) / CLOCKS_PER_SEC<< std::endl;
-  std::cout << std::endl;
-  std::cout << "Likelihood: " << -log_likelihood(T, Par, data) << std::endl << std::endl;
+  std::cout << "Likelihood: " << log_likelihood(T, Parmax, data) << std::endl ;
+  std::cout << "Time: " << timemax << std::endl << std::endl;
+
   //std::cout << "Branch lengths: " << std::endl;
   //print_vector(br);
   nonident = 1;
