@@ -179,9 +179,12 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   float timerec;
   float timemax;
 
-  std::cout << "Starting the EM algorithm: " ;
+  int outfiles; //whether to save output
+  std::cout << "Starting the EM algorithm: " << std::endl;
 
-  for (int it_runs = 0; it_runs < 1; it_runs++) {
+  int s;
+  int S = 0; //count of cases with neg branches
+  for (int it_runs = 0; it_runs < 10; it_runs++) {
       Par = create_parameters(T);
       Mod = create_model(model_name);
       std::cout << it_runs << ", " ;
@@ -199,10 +202,9 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
       branch_lengths(Par, br);
 
-      print_vector(br);
-      int s = find_negative(br);
-      std::cout << "s: "  << s;
-
+      //print_vector(br);
+      s = find_negative(br);
+      S +=s;
       timerec = ((float)end_time - start_time) / CLOCKS_PER_SEC;
 
       //assign the 1st iter time value, inc ase it's the best
@@ -230,19 +232,19 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
       variances[i] = Cov[i][i];
     }
 
-    // Save the sigmas into a file
-    save_sigmas_to(covariances_filename, Cov);
+    // OUTPUT Save the sigmas into a file
+    //save_sigmas_to(covariances_filename, Cov);
   }
 
   std::cout << std::endl;
   std::cout << "Finished." << std::endl;
   std::cout << "Likelihood: " << log_likelihood(T, Parmax, data) << std::endl ;
   std::cout << "Time: " << timemax << std::endl << std::endl;
-
+  std::cout << "negative branches: "  << S << std::endl;
   //std::cout << "Branch lengths: " << std::endl;
   //print_vector(br);
-  nonident = 1;
-  if (!nonident) {
+  outfiles = 0;
+  if (!nonident && outfiles) {
     std::cout << "Parameter variances: " << std::endl;
     print_vector(variances);
   }
@@ -258,7 +260,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   }
 
   // if it is not a simulation, store the parameters in a file !
-  if (!simulate) {
+  if (!simulate && outfiles) {
     std::fstream st;
     st.precision(15);
     st.setf(std::ios::fixed,std::ios::floatfield);

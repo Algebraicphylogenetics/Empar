@@ -47,7 +47,6 @@ int find_negative(std::vector<double> &v) {
   for(i=0; i < v.size(); i++) {
     //std::cout << "S " << v[i] ;
     if(std::isnan(v[i])) {
-            std::cout << "S " << v[i] ;
             break;
     }
   }
