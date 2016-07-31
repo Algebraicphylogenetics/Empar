@@ -187,6 +187,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   int S = 0; //count of cases with neg branches
 
   int iter;
+  int iterMax;
 
   for (int it_runs = 0; it_runs < 10; it_runs++) {
       Par = create_parameters(T);
@@ -213,6 +214,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
       //assign the 1st iter time value, inc ase it's the best
       if (it_runs == 0){
         timemax = timerec;
+        iterMax = iter;
       }
 
       if (likelL > likelMax){
@@ -220,6 +222,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
         Modmax = Mod;
         timemax = timerec;
         likelMax = likelL;
+        iterMax = iter;
       }
 
   }
@@ -244,6 +247,8 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
   std::cout << "Likelihood: " << log_likelihood(T, Parmax, data) << std::endl ;
   std::cout << "Time: " << timemax << std::endl << std::endl;
   std::cout << "negative branches: "  << S << std::endl;
+  std::cout << "Iter: "  << iterMax << std::endl;
+
   //std::cout << "Branch lengths: " << std::endl;
   //print_vector(br);
   outfiles = 0;
