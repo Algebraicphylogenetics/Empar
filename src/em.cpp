@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <cmath>
+#include <tuple>
 
 #include "em.h"
 #include "matrix.h"
@@ -259,7 +260,7 @@ void one_node_marginalization(Tree &T, Matrix &F, long a, StateList &sl, Root &s
 // data. Uses the value in Par as starting point.
 // eps is an error threshold for stopping the iteration.
 // returns the value of the likelihood
-float EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent) {
+std::tuple<float,int> EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent) {
   float LikelNew, LikelOld;
   long iter, iterMax;
   long i, j, e, a, b;
@@ -338,7 +339,7 @@ float EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps
   }
 
   delete_matrix(F);
-  return LikelNew;
+  return std::make_tuple (LikelNew, iter);
 }
 
 

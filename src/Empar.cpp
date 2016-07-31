@@ -11,6 +11,7 @@
 #include <list>
 #include <string>
 #include <stdexcept>
+#include <tuple>
 
 #include "Empar.h"
 #include "em.h"
@@ -184,6 +185,9 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
   int s;
   int S = 0; //count of cases with neg branches
+
+  int iter;
+
   for (int it_runs = 0; it_runs < 10; it_runs++) {
       Par = create_parameters(T);
       Mod = create_model(model_name);
@@ -191,8 +195,7 @@ void run(std::string tree_filename, std::string fasta_filename, std::string mode
 
       start_time = clock();
 
-      likelL= EMalgorithm(T, Mod, Par, data, eps);
-
+      std::tie(likelL, iter) = EMalgorithm(T, Mod, Par, data, eps);
 
       end_time = clock();
       //print_parameters(Par);

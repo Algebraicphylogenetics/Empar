@@ -31,7 +31,7 @@ double entropy_fast(Tree &T, Parameters &Par, StateList &sl);
 void two_node_marginalization(Tree &T, Matrix &F, long a, long b, StateList &sl, TMatrix &N);
 void one_node_marginalization(Tree &T, Matrix &F, long a, StateList &sl, Root &s);
 
-float EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent=false);
+std::tuple<float,int> EMalgorithm(Tree &T, Model &Mod, Parameters &Par, Counts &data, double eps, bool silent=false);
 void MLE_all_obs(Tree &T, Model &Mod, Parameters &Par, Matrix &F, StateList &sl);
 
 #endif

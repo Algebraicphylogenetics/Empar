@@ -15,6 +15,7 @@
 #include "random.h"
 #include "alignment.h"
 #include "fisher.h"
+#include <tuple>
 
 #include <vector>
 #include <algorithm>
@@ -400,7 +401,7 @@ void parameter_test(Tree &T, Model &Mod, long Nrep, long length, double eps, std
     }
 
     // Runs the EM
-    likel = EMalgorithm(T, Mod, Par, data, eps);
+    std::tie(likel, iter) = EMalgorithm(T, Mod, Par, data, eps);
 
     // If algorithm returns NaN skip this iteration.
     if (boost::math::isnan(likel)) {
@@ -582,7 +583,7 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
 
   long iter;
 
-  double likel;
+  float likel;
 
 
   Parameters Par;
@@ -607,7 +608,7 @@ void parameter_cloud(Tree &T, Model &Mod, long Nrep, long length, double eps, Pa
     add_pseudocounts(eps_pseudo, data);
 
     // Runs EM
-    likel = EMalgorithm(T, Mod, Par, data, eps);
+    std::tie(likel, iter)= EMalgorithm(T, Mod, Par, data, eps);
 
     // Choses the best permutation.
     guess_permutation(T, Mod, Par);
